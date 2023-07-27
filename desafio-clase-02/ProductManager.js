@@ -27,6 +27,15 @@ class ProductManager {
         return this.#_products.length+1;
     }
 
+    getproductByID(id) {
+        const productFound = this.#_products.find(item => item.id === id)
+        if (productFound) {
+            return productFound
+        } else {
+            return '[ERR] No se encontró ningun producto con ese id'
+        }
+    }
+
 }
 
 const pm = new ProductManager()
@@ -50,3 +59,5 @@ console.log(pm.addProduct({
 
 
 console.log(pm.getProducts())
+
+console.log(pm.getproductByID(4))
