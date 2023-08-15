@@ -30,7 +30,7 @@ class ProductManager {
             return '[ERR] No estan informados todos los campos necesarios para añadir el producto'
         }
         // Obtengo el array de productos desde el archivo
-        this.getProducts()
+        await this.getProducts()
         // Chequeo que el codigo de producto no exista. Si existe, devuelvo error, sino, lo agrego al array de productos
         const found = this.#_products.find(item => item.code === product.code)
         if(found) {
@@ -87,12 +87,13 @@ class ProductManager {
 
     /********* GET PRODUCT BY ID *********/
     async getProductByID(idValue) {
-        return this.getProductByField('id', idValue)
+        const product = await this.getProductByField('id', idValue)
+        return product
     }
 
     async getProductByField(propiedad, valor) {
         // Obtengo el array de productos desde el archivo
-        this.getProducts()
+        await this.getProducts()
         // Busco el producto a traves de la propiedad en el array
         const productFound = this.#_products.find(item => item[propiedad] === valor)
         if (productFound) {
@@ -119,24 +120,20 @@ class ProductManager {
     async #getMaxID() {
         // Obtengo el array de productos desde el archivo
         await this.getProducts()
-        console.log(this.#_products)
         // Obtengo el ID mas grande del array proveniente del archivo
         let cont = 0
         let maxID = 0
         this.#_products.forEach(item => {
             if (cont === 0) {
                 maxID = item.id
-                console.log('maxID 1: '+maxID)
             } else {
                 if (item.id > maxID) {
                     maxID = item.id
-                    console.log('maxID 2: '+maxID)
                 }    
             }
             cont++
         })
         // Devuelvo el mayor ID incrementado en 1
-        console.log('maxID 3: '+maxID)
         return maxID;
     }
 

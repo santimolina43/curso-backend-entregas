@@ -37,7 +37,7 @@ const mockProduct5 = {
     description: 'Este es un producto prueba',
     price: 200,
     thumbnail: 'Sin imagen',
-    code: 'abc127',
+    code: 'abc137',
     stock: 25
 }
 const mockProduct6 = {
@@ -58,6 +58,7 @@ const mockProduct7 = {
 }
 const mockProduct8 = {
     title: 'Producto prueba',
+    description: 'Este es un producto prueba',
     price: 200,
     thumbnail: 'Sin imagen',
     code: 'abc120',
@@ -66,16 +67,16 @@ const mockProduct8 = {
 const productManager = new ProductManager('./data/products.json')
 
 const test = async () => {
-    console.log(await productManager.addProduct(mockProduct1))
-    console.log(await productManager.addProduct(mockProduct2))
-    console.log(await productManager.addProduct(mockProduct3))
-    console.log(await productManager.addProduct(mockProduct4))
-    console.log(await productManager.addProduct(mockProduct5))
-    console.log(await productManager.addProduct(mockProduct6))
-    console.log(await productManager.addProduct(mockProduct7))
-    console.log(await productManager.addProduct(mockProduct8))
-//    console.log('max id: '+await productManager.getMaxID())
-    console.log(await productManager.getProducts())
+    // console.log(await productManager.addProduct(mockProduct1))
+    // console.log(await productManager.addProduct(mockProduct2))
+    // console.log(await productManager.addProduct(mockProduct3))
+    // console.log(await productManager.addProduct(mockProduct4))
+    // console.log(await productManager.addProduct(mockProduct5))
+    // console.log(await productManager.addProduct(mockProduct6))
+    // console.log(await productManager.addProduct(mockProduct7))
+    // console.log(await productManager.addProduct(mockProduct8))
+    // console.log(await productManager.getProducts())
+    // console.log(await productManager.getProductByID(2))
 }
 
 test()
