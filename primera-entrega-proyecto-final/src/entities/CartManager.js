@@ -38,25 +38,38 @@ class CartManager {
     async addProductToCart(cartID, productID) {
         // Obtengo el array de carritos desde el archivo
         await this.getCarts()
-        // Recorro el array de carritos y modifico los solicitados
+        // Verifico que el id de producto sea valido
+        let productFound = await productManager.getProductByID(productID)
+        if (!productFound.id) return '[ERR] No existe ningun producto con ese id'
+        // Recorro el array de carritos y añado los productos en caso de encontrar el carrito
         let isFound = false
         let newArrayCarts = this.#_carts.map(item => {
             if (item.id === cartID) {
                 isFound = true
-                const productFound = item.products.find(item => item.product === productID)
+                productFound = item.products.find(item => item.product === productID)
                 if (productFound) {
-                    item.products.quantity ++
-                    return item
+                    let newArrayProducts = item.products.map(item => {
+                        if (item.product === productID) {
+                            return {
+                                product: item.product, 
+                                quantity: item.quantity+1
+                            }
+                        } else return item
+                    })
+                    return {
+                        id: cartID, 
+                        products: newArrayProducts
+                    }
                 } else {
                     item.products.push({product: productID, quantity: 1})
                     return item
                 }
             } else return item
         })
-        if (!isFound) return '[ERR] No existe ningun carrito con ese codigo'
-        // Reescribo el archivo con el array modificado
-        await fs.promises.writeFile(this.#_path, JSON.stringify(newArrayProducts, null, '\t'))
-        return (await this.getProducts()).find(item => item.id === id)
+        if (!isFound) return '[ERR] No existe ningun carrito con ese id'
+        // Reescribo el archivo con el array de los carritos modificado
+        await fs.promises.writeFile(this.#_path, JSON.stringify(newArrayCarts, null, '\t'))
+        return (await this.getCarts()).find(item => item.id === cartID)
     }
 
     /********* GET CART BY ID *********/
@@ -79,10 +92,11 @@ class CartManager {
         // Busco el carrito a traves del id en el array
         const cartFound = this.#_carts.find(item => item.id === idValue)
         if (cartFound) {
-            let cartProducts = cartFound.products.map(item => {
-                const product = productManager.getProductByID(item.product)
-                return product
-            })
+            // Mapeo de productos usando Promise.all()
+            const cartProducts = await Promise.all(cartFound.products.map(async item => {
+                const product = await productManager.getProductByID(item.product);
+                return product;
+            }));
             return cartProducts
         } else {
             return '[ERR] No se encontró ningun carrito con ese id'

@@ -11,9 +11,9 @@ productsRouter.get('/', async (req, res) => {
     const limit = parseInt(req.query.limit)
     if (limit || limit===0) {
         let limitProducts = products.slice(0, limit).map(item => item)
-        res.status(200).json(limitProducts)
+        res.status(200).json({ status: "success", payload: limitProducts })
     } else {
-        res.status(200).json(products)
+        res.status(200).json({ status: "success", payload: products })
     }
 })
 
@@ -22,14 +22,14 @@ productsRouter.get('/:pid', async (req, res) => {
     const id = parseInt(req.params.pid)
     const productoEncontrado = await productManager.getProductByID(id)
     if (!productoEncontrado.id) return res.status(404).json({ status:"error", payload: productoEncontrado})
-    res.status(200).json(productoEncontrado)
+    res.status(200).json({ status: "success", payload: productoEncontrado })
 })
 
 /********* POST PRODUCTS *********/    
 productsRouter.post('/', async (req, res) => {
     const newProduct = await productManager.addProduct(req.body)
     if (!newProduct.id) return res.status(400).json({ status:"error", payload: newProduct})
-    res.status(200).json(newProduct)
+    res.status(200).json({ status: "success", payload: newProduct })
 })
 
 /********* PUT PRODUCTS *********/    
