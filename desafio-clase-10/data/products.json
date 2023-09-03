@@ -1,0 +1,68 @@
+[
+	{
+		"id": 1,
+		"title": "Producto prueba",
+		"description": "Este es un producto prueba",
+		"price": 200,
+		"thumbnail": "Sin imagen",
+		"code": "abc123",
+		"stock": 25,
+		"category": "señuelos",
+		"status": true
+	},
+	{
+		"id": 7,
+		"title": "Producto prueba",
+		"description": "Este es un producto prueba",
+		"price": 200,
+		"thumbnail": "Sin imagen",
+		"code": "abc129",
+		"stock": 80,
+		"category": "moscas",
+		"status": true
+	},
+	{
+		"id": 11,
+		"title": "Bullybugger Verde",
+		"description": "Mosca de hundimiento",
+		"price": 1000,
+		"thumbnail": "Sin imagen",
+		"code": "#5409",
+		"stock": 30,
+		"category": "moscas patagonicas",
+		"status": true
+	},
+	{
+		"id": 12,
+		"title": "Bullybugger Verde",
+		"description": "Mosca de hundimiento",
+		"price": 1000,
+		"thumbnail": "Sin imagen",
+		"code": "#5403",
+		"stock": 30,
+		"category": "moscas patagonicas",
+		"status": true
+	},
+	{
+		"id": 13,
+		"title": "Bullybugger Roja",
+		"description": "Mosca de hundimiento",
+		"price": 1000,
+		"thumbnail": "Sin imagen",
+		"code": "#5423",
+		"stock": 30,
+		"category": "moscas patagonicas",
+		"status": true
+	},
+	{
+		"id": 14,
+		"title": "Caña Nº6",
+		"description": "Caña de Mosca",
+		"price": 1000,
+		"thumbnail": "Sin imagen",
+		"code": "#5523",
+		"stock": 30,
+		"category": "moscas patagonicas",
+		"status": true
+	}
+]

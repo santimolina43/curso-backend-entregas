@@ -1,0 +1,15 @@
+
+<h1>Productos en tiempo real</h1>
+<hr/>
+    {{!-- <ul>
+        {{#each products}}
+            <li>{{title}} - Precio: {{price}}</li>
+        {{/each}}
+    </ul> --}}
+<div id="history"></div>
+{{!-- aqui (del lado del cliente) configuro el socket conectandolo de la siguiente manera: --}}
+{{!-- llamando y conectandome con la libreria socket.io: --}}
+<script src="/socket.io/socket.io.js"></script>
+{{!-- conectandome con un script que crearemos con la logica para nuestro chat: --}}
+<script src="/js/realTimeProducts.js"></script>
+
