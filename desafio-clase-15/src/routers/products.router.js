@@ -1,5 +1,5 @@
 import Router from 'express'
-import ProductManager from '../entities/ProductManager.js'
+import ProductManager from '../managers/filesystem/ProductManager.js'
 import { socketServer } from '../app.js'
 import multer from 'multer'
 
