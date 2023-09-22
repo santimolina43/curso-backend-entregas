@@ -1,14 +1,13 @@
 
 import mongoose from 'mongoose'
 
-const cartCollection = 'carts'
+const messageCollection = 'messages'
 
-const cartSchema = new mongoose.Schema({
-    id: { type: Number, required: true, unique: true },
+const messageSchema = new mongoose.Schema({
     user: { type: String, required: true },
     message: { type: String, required: true }
 })
 
-const cartModel = mongoose.model(cartCollection, cartSchema)
+const messagesModel = mongoose.model(messageCollection, messageSchema)
 
-export default cartModel
+export default messagesModel

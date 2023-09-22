@@ -1,4 +1,3 @@
-import fs from 'fs'
 import ProductManager from './ProductManager.js'
 import cartModel from './models/carts.model.js'
 

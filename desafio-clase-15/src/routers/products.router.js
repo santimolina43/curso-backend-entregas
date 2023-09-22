@@ -46,7 +46,7 @@ productsRouter.post('/',  uploader.single('thumbnail'), async (req, res) => {
     const newProduct = await productManager.addProduct(req.body)
     if (!newProduct._id) return res.status(400).json({ status:"error", payload: newProduct})
     // Emito un evento de Socket.io para notificar a todos los clientes conectados sobre la adicion
-    socketServer.emit('history', await productManager.getProducts())
+    socketServer.emit('productsHistory', await productManager.getProducts())
     res.status(200).json({ status: "success", payload: newProduct })
 })
 
@@ -56,7 +56,7 @@ productsRouter.put('/:pid', async (req, res) => {
     const updatedProduct = await productManager.updateProduct(id, req.body)
     if (!updatedProduct._id) return res.status(404).json({ status:"error", payload: updatedProduct})
     // Emito un evento de Socket.io para notificar a todos los clientes conectados sobre la modificación
-    socketServer.emit('history', await productManager.getProducts())
+    socketServer.emit('productsHistory', await productManager.getProducts())
     res.status(200).json({status:'success', payload: updatedProduct})
 })
 
@@ -67,7 +67,7 @@ productsRouter.delete('/:pid', async (req, res) => {
     const productDeletedMsg = await productManager.deleteProduct(id)
     if (productDeletedMsg === msgError) return res.status(404).json({status:'error', payload: productDeletedMsg})
     // Emito un evento de Socket.io para notificar a todos los clientes conectados sobre la eliminacion
-    socketServer.emit('history', await productManager.getProducts())
+    socketServer.emit('productsHistory', await productManager.getProducts())
     res.status(200).json({status: 'success', payload: productDeletedMsg})
 })
 

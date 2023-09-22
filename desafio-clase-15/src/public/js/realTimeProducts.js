@@ -53,7 +53,7 @@ function deleteProduct(pid) {
         });
 };
 
-socketClient.on('history', async data => {
+socketClient.on('productsHistory', async data => {
     const arrayProducts = data
     const history = document.getElementById('history')
     history.innerHTML = '';

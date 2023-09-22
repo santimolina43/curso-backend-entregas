@@ -1,7 +1,7 @@
 import Router from 'express'
 import CartManager from '../dao/mongoDB/CartManager.js'
 
-const cartManager = new CartManager('./data/carts.json')
+const cartManager = new CartManager()
 const cartsRouter = Router()
 
 /********* GET PRODUCTS FROM CART BY ID *********/    
