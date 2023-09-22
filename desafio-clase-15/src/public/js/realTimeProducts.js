@@ -2,39 +2,39 @@
 const socketClient = io();
 
 const productForm = document.getElementById('productForm');
-productForm.addEventListener('submit', function(event) {
+productForm.addEventListener('submit', async function(event) {
     event.preventDefault(); // Evita la acción predeterminada de enviar el formulario
     // Obtengo los datos del formulario
     const formData = new FormData(productForm);
 
     // Realizo una solicitud AJAX (fetch) para enviar los datos al servidor
-    fetch('/api/products', {
-        method: 'POST',
-        body: formData,
-    })
-        .then(response => {
-            if (response.ok) {
-                const title = document.getElementById('title');
-                const description = document.getElementById('description');
-                const price = document.getElementById('price');
-                const thumbnail = document.getElementById('thumbnail');
-                const code = document.getElementById('code');
-                const stock = document.getElementById('stock');
-                const category = document.getElementById('category');
-                title.value = "" 
-                description.value = "" 
-                price.value = "" 
-                thumbnail.value = "" 
-                code.value = "" 
-                stock.value = "" 
-                category.value = "" 
-            } else {
-                throw new Error('No se pudo completar la solicitud.');
-            }
+    try {
+        const response = await fetch('/api/products', {
+            method: 'POST',
+            body: formData,
         })
-        .catch(error => {
+        if (response.ok) {
+            const title = document.getElementById('title');
+            const description = document.getElementById('description');
+            const price = document.getElementById('price');
+            const thumbnail = document.getElementById('thumbnail');
+            const code = document.getElementById('code');
+            const stock = document.getElementById('stock');
+            const category = document.getElementById('category');
+            title.value = "" 
+            description.value = "" 
+            price.value = "" 
+            thumbnail.value = "" 
+            code.value = "" 
+            stock.value = "" 
+            category.value = "" 
+        } else {
+            throw new Error('No se pudo completar la solicitud.');
+        }
+    }
+    catch (error) {
             console.error('Error en la solicitud:', error);
-        });
+    };
 });
 
 function deleteProduct(pid) {

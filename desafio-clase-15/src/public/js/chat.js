@@ -15,26 +15,26 @@ Swal.fire({
     let chatbox = document.getElementById('chatbox')
     
     
-    chatbox.addEventListener('keyup', (evt) => {
+    chatbox.addEventListener('keyup', async (evt) => {
         if (evt.key === "Enter") {
             if (chatbox.value.trim().length > 0) { 
                 let message = JSON.stringify({user: user, message: chatbox.value})
                 // Realizo una solicitud AJAX (fetch) para enviar los datos al servidor
-                fetch('/chat/api/messages', {
-                    method: 'POST',
-                    body: message,
-                    headers: {'Content-Type': 'application/json'}
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            socketClient.emit('message')
-                        } else {
-                            throw new Error('No se pudo completar la solicitud.');
-                        }
+                try {
+                    const response = await fetch('/chat/api/messages', {
+                        method: 'POST',
+                        body: message,
+                        headers: {'Content-Type': 'application/json'}
                     })
-                    .catch(error => {
-                        console.error('Error en la solicitud:', error);
-                    });
+                    if (response.ok) {
+                        socketClient.emit('message')
+                    } else {
+                        throw new Error('No se pudo completar la solicitud.');
+                    }
+                } 
+                catch (error) {
+                    console.error('Error en la solicitud:', error);
+                };   
             }
         }
     })                             
