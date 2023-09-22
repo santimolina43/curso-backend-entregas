@@ -6,7 +6,7 @@ import productsRouter from './routers/products.router.js'
 import cartsRouter from './routers/carts.router.js'
 import homeRouter from './routers/home.router.js'
 import realtimeproductsRouter from './routers/realTimeProducts.router.js'
-import ProductManager from './managers/filesystem/ProductManager.js'
+import ProductManager from './dao/mongoDB/ProductManager.js'
 
 const app = express()
 const productManager = new ProductManager('./data/products.json')                               
@@ -33,6 +33,7 @@ try {
     await mongoose.connect('mongodb+srv://santimolina43:SantiMolina43@huapi.hudzda5.mongodb.net/', {
         dbName: 'ecommerce'
     })
+    console.log('DB Conected!')
 } catch(err) {
     console.log(err.message)
 }

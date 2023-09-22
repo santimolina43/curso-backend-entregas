@@ -67,7 +67,7 @@ socketClient.on('history', async data => {
                         <p class="card-text">${product.description}</p>
                         <h6 class="card-text">Precio: $${product.price}</h6>
                         // <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                        <button class="btn btn-danger small" onclick="deleteProduct(${product.id})">Eliminar</button>
+                        <button class="btn btn-danger small" onclick="deleteProduct('${product._id.toString()}')">Eliminar</button>
                     </div>
                 </div>
             </div>
