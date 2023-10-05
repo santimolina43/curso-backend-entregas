@@ -1,0 +1,51 @@
+
+<div class="container my-5 general-container">
+    <h1 class="h1">Carrito</h1>
+    <hr/>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+            <th>Producto</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each cartProducts.payload.products}}
+            <tr>
+            <td>
+                <img src="{{this.product.thumbnail}}" alt="{{this.product.title}}" class="img-thumbnail" width="100">
+            </td>
+            <td>
+                <h5>{{this.product.title}}</h5>
+                <p>{{this.product.description}}</p>
+            </td>
+            <td>${{this.product.price}}</td>
+            <td>
+                <div class="input-group">
+                <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity('{{this.product._id}}')">-</button>
+                <input type="text" class="form-control" value="{{this.quantity}}" readonly>
+                <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity('{{this.product._id}}')">+</button>
+                </div>
+            </td>
+            <td>${{this.quantity}}*{{this.product.price}}</td>
+            <td>
+                <button class="btn btn-danger" onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
+            </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        </table>
+    </div>
+    <div class="text-end">
+        <p>Total: </p> {{!-- ${{calculateTotal cartProducts.payload.products}} --}}
+        <a href="/checkout" class="btn btn-primary">Ir al Pago</a>
+    </div>
+    <hr/>
+</div>
+
+<script src="/js/home.js"></script>
