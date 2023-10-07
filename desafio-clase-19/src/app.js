@@ -56,11 +56,11 @@ try {
     console.log(err.message)
 }
 
-// 
+// STORAGE
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: 'mongodb://localhost:27017',
-        dbName: 'sessions'
+        mongoUrl: 'mongodb+srv://santimolina43:SantiMolina43@huapi.hudzda5.mongodb.net/',
+        dbName: 'ecommerce'
     }),
     secret: 'victoriaSecret', 
     resave: true, 

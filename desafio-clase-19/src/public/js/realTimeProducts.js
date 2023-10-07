@@ -6,7 +6,7 @@ productForm.addEventListener('submit', async function(event) {
     event.preventDefault(); // Evita la acción predeterminada de enviar el formulario
     // Obtengo los datos del formulario
     const formData = new FormData(productForm);
-
+    console.log(document.getElementById('title').value)
     // Realizo una solicitud AJAX (fetch) para enviar los datos al servidor
     try {
         const response = await fetch('/api/products', {

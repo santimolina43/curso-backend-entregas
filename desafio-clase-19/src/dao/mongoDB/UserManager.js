@@ -21,21 +21,32 @@ class UserManager {
 
     /********* ADD USER *********/
     async addUser(user) {
+        console.log('aca 0')
         // Compruebo que esten todos los campos necesarios
         if (!user.first_name||!user.last_name||!user.email||!user.age||!user.password) {
+            console.log('aca 3')
+
             return '[ERR] No estan informados todos los campos necesarios para añadir el usuario'
         }
         // Obtengo el array de users desde la base de datos
-        await this.getusers()
+        
         // Chequeo que el email no exista. Si existe, devuelvo error, sino, agrego el user a la bd
-        const found = this.#_users.find(item => item.email === user.email)      
-        if(found) {
-            return '[ERR] Usuario ya existente.'
-        } else {
-            // Creamos el user en la base de datos
-            let newuser = await userModel.create(user);
-            return newuser
+        try {
+            const found = await userModel.findOne({email: user.email})     
+            if(found) {
+                console.log('aca 2')
+    
+                return '[ERR] Usuario ya existente.'
+            } else {
+                // Creamos el user en la base de datos
+                console.log('aca 1')
+                let newuser = await userModel.create(user);
+                return newuser
+            } 
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
         }
+        
     }  
 
     /********* UPDATE user *********/
