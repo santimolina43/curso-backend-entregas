@@ -1,8 +1,9 @@
 import { Router } from 'express'
+import { publicRoutes } from '../../middlewares/auth.middleware.js'
 
 const homeRouter = Router()
 
-homeRouter.get('/', async (req, res) => {
+homeRouter.get('/', publicRoutes, async (req, res) => {
     
     // Armo la url para hacer la peticion a la api de los productos
     let requesturl = '/' + (req.query.limit ? `?limit=${req.query.limit}` : '?limit=10')

@@ -2,14 +2,18 @@ import express from 'express'
 import handlebars from 'express-handlebars'
 import {Server} from 'socket.io' 
 import mongoose from 'mongoose'
+import session from 'express-session'
+import MongoStore from 'connect-mongo'
 // Views routers
 import homeRouter from './routers/views/home.router.js'
 import cartRouter from './routers/views/cart.router.js'
 import realtimeproductsRouter from './routers/views/realTimeProducts.router.js'
 // Api routers
-import productsRouter from './routers/products.router.js'
-import cartsRouter from './routers/carts.router.js'
-import chatRouter from './routers/chat.router.js'
+import productsRouter from './routers/api/products.router.js'
+import cartsRouter from './routers/api/carts.router.js'
+import sessionRouter from './routers/api/sessions.router.js'
+import chatRouter from './routers/views/chat.router.js'
+import loginRouter from './routers/views/login.router.js'
 // DB Managers
 import ProductManager from './dao/mongoDB/ProductManager.js'
 import ChatManager from './dao/mongoDB/ChatManager.js'
@@ -35,9 +39,11 @@ app.use('/products', homeRouter)
 app.use('/realtimeproducts', realtimeproductsRouter)
 app.use('/chat', chatRouter)
 app.use('/cart', cartRouter)
+app.use('/login', loginRouter)
 // api endpoints
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
+app.use('/api/session', sessionRouter)
 
 
 // me conecto a la base de datos y al servidor local asincronicamente al mismo tiempo
@@ -49,6 +55,17 @@ try {
 } catch(err) {
     console.log(err.message)
 }
+
+// 
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: 'mongodb://localhost:27017',
+        dbName: 'sessions'
+    }),
+    secret: 'victoriaSecret', 
+    resave: true, 
+    saveUninitialized: true 
+}))
 
 // abrimos el servidor y lo conectamos con socketServer
 const httpServer = app.listen(8080, () => console.log('HTTP Server Up!'))

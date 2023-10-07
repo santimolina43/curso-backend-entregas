@@ -1,6 +1,6 @@
 import Router from 'express'
-import CartManager from '../dao/mongoDB/CartManager.js'
-import cartModel from '../dao/mongoDB/models/carts.model.js'
+import CartManager from '../../dao/mongoDB/CartManager.js'
+import cartModel from '../../dao/mongoDB/models/carts.model.js'
 
 const cartManager = new CartManager()
 const cartsRouter = Router()

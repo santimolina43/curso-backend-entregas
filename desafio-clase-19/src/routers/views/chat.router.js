@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import ChatManager from '../dao/mongoDB/ChatManager.js'
+import ChatManager from '../../dao/mongoDB/ChatManager.js'
 
 const chatManager = new ChatManager()
 const chatRouter = Router()

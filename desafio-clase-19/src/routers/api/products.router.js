@@ -1,8 +1,8 @@
 import Router from 'express'
-import ProductManager from '../dao/mongoDB/ProductManager.js'
-import { socketServer } from '../app.js'
+import ProductManager from '../../dao/mongoDB/ProductManager.js'
+import { socketServer } from '../../app.js'
 import multer from 'multer'
-import productModel from '../dao/mongoDB/models/products.model.js'
+import productModel from '../../dao/mongoDB/models/products.model.js'
 
 const products = []
 
@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 const uploader = multer({storage})
 const productsRouter = Router()
 
-const productManager = new ProductManager('./data/products.json')
+const productManager = new ProductManager()
 
 /********* GET PRODUCTS *********/    
 productsRouter.get('/', async (req, res) => {
