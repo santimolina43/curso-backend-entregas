@@ -14,6 +14,7 @@ import cartsRouter from './routers/api/carts.router.js'
 import sessionRouter from './routers/api/sessions.router.js'
 import chatRouter from './routers/views/chat.router.js'
 import loginRouter from './routers/views/login.router.js'
+import profileRouter from './routers/views/profile.router.js'
 // DB Managers
 import ProductManager from './dao/mongoDB/ProductManager.js'
 import ChatManager from './dao/mongoDB/ChatManager.js'
@@ -33,6 +34,17 @@ app.engine('handlebars', handlebars.engine())
 app.set('views', './src/views')
 app.set('view engine', 'handlebars')
 
+// STORAGE
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: 'mongodb+srv://santimolina43:SantiMolina43@huapi.hudzda5.mongodb.net/',
+        dbName: 'ecommerce'
+    }),
+    secret: 'mi_secreto', 
+    resave: true, 
+    saveUninitialized: false 
+}))
+
 // views endpoints 
 app.use('/', homeRouter)
 app.use('/products', homeRouter)
@@ -40,6 +52,7 @@ app.use('/realtimeproducts', realtimeproductsRouter)
 app.use('/chat', chatRouter)
 app.use('/cart', cartRouter)
 app.use('/login', loginRouter)
+app.use('/profile', profileRouter)
 // api endpoints
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
@@ -55,17 +68,6 @@ try {
 } catch(err) {
     console.log(err.message)
 }
-
-// STORAGE
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://santimolina43:SantiMolina43@huapi.hudzda5.mongodb.net/',
-        dbName: 'ecommerce'
-    }),
-    secret: 'victoriaSecret', 
-    resave: true, 
-    saveUninitialized: true 
-}))
 
 // abrimos el servidor y lo conectamos con socketServer
 const httpServer = app.listen(8080, () => console.log('HTTP Server Up!'))

@@ -26,9 +26,7 @@ homeRouter.get('/', publicRoutes, async (req, res) => {
             return response.json(); 
         })
         .then(products => {
-            console.log(products)
-            // const arrayProducts = products.payload
-            res.render('home', { products })
+            res.render('home', { products, ...req.session.user })
         })
         .catch(error => {
             console.error('Ocurrió un error:', error);

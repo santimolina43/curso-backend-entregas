@@ -1,8 +1,9 @@
 import { Router } from 'express'
+import { publicRoutes } from '../../middlewares/auth.middleware.js';
 
 const cartRouter = Router()
 
-cartRouter.get('/651d70aee46c0698f0e4d87c', async (req, res) => {
+cartRouter.get('/651d70aee46c0698f0e4d87c', publicRoutes, async (req, res) => {
     // Hago la peticion a la api de los carritos para un carrito en especial harcodeado
     fetch('http://localhost:8080/api/carts/651d70aee46c0698f0e4d87c', {
         method: 'GET',

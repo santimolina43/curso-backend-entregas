@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import ChatManager from '../../dao/mongoDB/ChatManager.js'
+import { publicRoutes } from '../../middlewares/auth.middleware.js'
 
 const chatManager = new ChatManager()
 const chatRouter = Router()
 
 /********* GET MESSAGES *********/    
-chatRouter.get('/', (req, res) => {
+chatRouter.get('/', publicRoutes, (req, res) => {
     res.render('chat', {}) // de momento solo renderizamos la vista, sin pasarle ningun objeto
 })
 

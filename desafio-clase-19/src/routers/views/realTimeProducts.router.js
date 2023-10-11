@@ -1,8 +1,9 @@
 import { Router } from 'express'
+import { publicRoutes } from '../../middlewares/auth.middleware.js'
 
 const realtimeproductsRouter = Router()
 
-realtimeproductsRouter.get('/', (req, res) => {
+realtimeproductsRouter.get('/', publicRoutes, (req, res) => {
     res.render('realTimeProducts', {})
 })
 

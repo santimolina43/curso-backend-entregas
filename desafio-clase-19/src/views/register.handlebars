@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header">Registro de Usuario</div>
                 <div class="card-body">
-                    <form id="userForm" method="POST" action="/api/session" enctype="multipart/form-data">
+                    <form id="registerForm" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="first_name" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="first_name" name="first_name" required>
@@ -37,4 +37,6 @@
     </div>
 </div>
 
-<script src="/js/login.js"></script>
+{{!-- cdn de sweetalert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/register.js"></script>
