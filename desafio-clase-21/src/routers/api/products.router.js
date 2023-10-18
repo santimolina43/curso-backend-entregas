@@ -22,9 +22,7 @@ const productManager = new ProductManager()
 /********* GET PRODUCTS *********/    
 productsRouter.get('/', async (req, res) => {
     // Query params opcionales para limitar, elegir la pagina y ordenar los documentos
-    const limit = parseInt(req.query.limit)
-    const page = parseInt(req.query.page)
-    const sort = parseInt(req.query.sort)
+    const { limit, page, sort } = req.query
     const filters = {limit: limit, page: page, sort: {price: sort}}
     // Query params opcionales para filtrar los documentos por categoria y stock mayor a 0
     const query = {};
@@ -40,17 +38,18 @@ productsRouter.get('/', async (req, res) => {
     queryParams = req.query.category ? `${queryParams}&category=${req.query.category}` : queryParams
     queryParams = req.query.stock ? `${queryParams}&stock=${req.query.stock}` : queryParams
     // Respondo la consulta con el formato solicitado
-    res.status(200).json({ 
-        status: "success", 
-        payload: products.docs, 
-        totalPages: products.totalPages,
-        prevPage: products.prevPage,
-        nextPage: products.nextPage,
-        page: products.page,
-        hasPrevPage: products.hasPrevPage,
-        hasNextPage: products.hasNextPage,
-        prevLink: products.hasPrevPage ? `http://localhost:8080/?page=${page - 1}${queryParams}` : null,
-        nextLink: products.hasNextPage ? `http://localhost:8080/?page=${page + 1}${queryParams}` : null
+    const { totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = products
+    res.status(200).json({
+    status: "success", 
+    payload: products.docs, 
+    totalPages,
+    prevPage,
+    nextPage,
+    page: products.page,
+    hasPrevPage,
+    hasNextPage,
+    prevLink: hasPrevPage ? `http://localhost:8080/?page=${page - 1}${queryParams}` : null,
+    nextLink: hasNextPage ? `http://localhost:8080/?page=${page + 1}${queryParams}` : null
     })
 })
 
@@ -73,7 +72,7 @@ productsRouter.post('/',  uploader.single('thumbnail'), async (req, res) => {
         socketServer.emit('productsHistory', await productManager.getProducts())
         res.status(200).json({ status: "success", payload: newProduct })
     } catch (error) {
-        return res.status(400).json({ status:"error", payload: '[ERR] Error al añadir el carrito'})
+        return res.status(400).json({ status:"error", payload: 'Error al añadir el carrito'})
     }
 })
 
@@ -90,7 +89,7 @@ productsRouter.put('/:pid', async (req, res) => {
 /********* DELETE PRODUCTS *********/    
 productsRouter.delete('/:pid', async (req, res) => {
     const id = req.params.pid
-    const msgError = '[ERR] No existe ningun producto con ese id'
+    const msgError = 'No existe ningun producto con ese id'
     const productDeletedMsg = await productManager.deleteProduct(id)
     if (productDeletedMsg === msgError) return res.status(404).json({status:'error', payload: productDeletedMsg})
     // Emito un evento de Socket.io para notificar a todos los clientes conectados sobre la eliminacion

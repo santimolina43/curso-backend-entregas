@@ -2,7 +2,7 @@ import passport from "passport"
 import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
 import { createHash, isValidPassword } from "../utils.js"
-import UserModel from "../dao/models/user.model.js"
+import UserModel from "../dao/mongoDB/models/users.model.js"
 
 const localStrategy = local.Strategy
 
@@ -32,9 +32,21 @@ const initializePassport = () => {
     passport.use('login', new localStrategy({
         usernameField: 'email',
     }, async(username, password, done) => {
+        if (username === 'adminCoder@coder.com') {
+            const adminUser = {
+                first_name: 'Admin',
+                last_name: 'User',
+                email: username,
+                age: 30,
+                password: password,
+                role: 'admin'
+            } 
+            return done(null, adminUser)
+        } 
         try {
             const user = await UserModel.findOne({ email: username })
             if (!user) {
+                console.log('este error')
                 return done(null, false)
             }
             if (!isValidPassword(user, password)) return done(null, false)
@@ -43,9 +55,9 @@ const initializePassport = () => {
     }))
 
     passport.use('github', new GitHubStrategy({
-        clientID: 'Iv1.0545ae50bd87f751',
-        clientSecret: 'caf4af878f8cea8345fdf1d337ecc3f1fc624877',
-        callbackURL: 'http://localhost:8080/session/githubcallback'
+        clientID: 'Iv1.c46505a98f4ce012',
+        clientSecret: '3adc760e54100eaba6aa7393b28febf797946f73',
+        callbackURL: 'http://localhost:8080/api/session/githubcallback'
     }, async(accessToken, refreshToken, profile, done) => {
         try {
             console.log(profile) // Recomendado hacer un console.log de toda la informacion
@@ -55,10 +67,10 @@ const initializePassport = () => {
                                               // null, user 
             // si el usuario no existia en nuestro sitio web, lo agregamos a la base de datos
             const newUser = await UserModel.create({
-                first_name: profile._json.name, 
+                first_name: profile._json.login, 
                 last_name: '', // notar como nos toca rellenar los datos que no vienen desde el perfil
                 age:18, // notar como nos toca rellenar los datos que no vienen desde el perfil
-                email: profile._json.email,
+                email: profile._json.login+'@gmail.com',
                 password: '' // al ser autenticacion de terceros, no podemos asignar un password
             })
             return done(null, newUser)
@@ -68,12 +80,27 @@ const initializePassport = () => {
     }))
 
     passport.serializeUser((user, done) => {
-        done(null, user._id)
+        done(null, user)
     })
 
-    passport.deserializeUser(async(id, done) => {
-        const user = await UserModel.findById(id)
-        done(null, user)
+    passport.deserializeUser(async(user, done) => {
+        if (!user._id) {
+            if (user.email === 'adminCoder@coder.com') {
+                const adminUser = {
+                    _id: 'adminfalseid12345',
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    age: user.age,
+                    password: user.password,
+                    role: user.role
+                }
+                done(null, adminUser)
+            }
+        } else {
+            const dbUser = await UserModel.findById(user._id)
+            done(null, dbUser)
+        }
     })
 
 }

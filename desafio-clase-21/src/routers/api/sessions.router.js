@@ -14,19 +14,12 @@ sessionsRouter.get('/failRegister', (req, res) => res.send({ error: 'Passport re
 
 
 /********* POST SESSION *********/    
-sessionsRouter.post('/login',  passport.authenticate('login', {failureRedirect: '/session/failLogin'} ), async (req, res) => {
+sessionsRouter.post('/login', passport.authenticate('login', {failureRedirect: '/login/failLogin'} ), async (req, res) => {
     if (!req.user) {
         return res.status(400).send({ status: 'error', error: 'Invalid credentials' })
     }
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        age: req.user.age
-    }
     res.redirect('/products')
 })
-sessionsRouter.get('/failLogin', (req, res) => res.send({ error: 'Passport login failed' }))
 
 /********* INICIO DE SESION CON GITHUB *********/ 
 sessionsRouter.get('/github', passport.authenticate('github', { scope: ['user:email']}), (req, res) => {

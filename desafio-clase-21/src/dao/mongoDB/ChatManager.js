@@ -19,7 +19,7 @@ class ChatManager {
     async addMessage(message) {
         // Compruebo que esten todos los campos necesarios
         if (!message.user||!message.message) {
-            return '[ERR] No estan informados todos los campos necesarios para enviar el mensaje'
+            return 'No estan informados todos los campos necesarios para enviar el mensaje'
         }
         // Añadimos el mensaje a la base de datos
         let newMessage = await messageModel.create(message);
@@ -44,7 +44,7 @@ class ChatManager {
 //                 isFound = true
 //             }
 //         })
-//         if (!isFound) return '[ERR] No existe ningun messageo con ese id'
+//         if (!isFound) return 'No existe ningun messageo con ese id'
 //         // Elimino el messageo
 //         await messageModel.deleteOne({_id: id})
 //         // Obtengo el nuevo array de messageos desde la base de datos
@@ -65,7 +65,7 @@ class ChatManager {
 //         if (messageFound) {
 //             return messageFound
 //         } else {
-//             return '[ERR] No se encontró ningun messageo con '+propiedad+' = '+valor
+//             return 'No se encontró ningun messageo con '+propiedad+' = '+valor
 //         }
 //     }
 

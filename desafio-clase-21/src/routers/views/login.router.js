@@ -4,7 +4,7 @@ import { loginRoutes } from '../../middlewares/auth.middleware.js'
 const loginRouter = Router()
 
 /********* GET LOGIN VIEW *********/    
-loginRouter.get('/', loginRoutes, (req, res) => {
+loginRouter.get('/', loginRoutes, (req, res) => { //
     res.render('login', {})
 })
 
@@ -20,5 +20,8 @@ loginRouter.get('/logout', (req, res) => {
         return res.render('login')
     })
 })
+
+/********* GET LOGIN ERROR *********/    
+loginRouter.get('/failLogin', (req, res) => res.send({ error: 'Passport login failed' }))
 
 export default loginRouter

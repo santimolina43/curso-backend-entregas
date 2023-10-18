@@ -14,7 +14,7 @@ class ProductManager {
             if (products.length === 0) return [];
             this.#_products = products
         } catch (error) {
-            return '[ERR] Error al buscar los productos en la base de datos'
+            return 'Error al buscar los productos en la base de datos'
         }
         return this.#_products
     }   
@@ -23,14 +23,14 @@ class ProductManager {
     async addProduct(product) {
         // Compruebo que esten todos los campos necesarios
         if (!product.title||!product.description||!product.price||!product.category||!product.code||!product.stock) {
-            return '[ERR] No estan informados todos los campos necesarios para añadir el producto'
+            return 'No estan informados todos los campos necesarios para añadir el producto'
         }
         // Obtengo el array de productos desde la base de datos
         await this.getProducts()
         // Chequeo que el codigo de producto no exista. Si existe, devuelvo error, sino, lo agrego al array de productos
         const found = this.#_products.find(item => item.code === product.code)      
         if(found) {
-            return '[ERR] Codigo invalido, ya existente.'
+            return 'Codigo invalido, ya existente.'
         } else {
             // Creamos el producto en la base de datos
             let newProduct = await productModel.create(product);
@@ -56,7 +56,7 @@ class ProductManager {
                 isFound = true
             }
         })
-        if (!isFound) return '[ERR] No existe ningun producto con ese id'
+        if (!isFound) return 'No existe ningun producto con ese id'
         // Elimino el producto
         await productModel.deleteOne({_id: id})
         // Obtengo el nuevo array de productos desde la base de datos
@@ -77,7 +77,7 @@ class ProductManager {
         if (productFound) {
             return productFound
         } else {
-            return '[ERR] No se encontró ningun producto con '+propiedad+' = '+valor
+            return 'No se encontró ningun producto con '+propiedad+' = '+valor
         }
     }
 

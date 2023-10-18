@@ -15,9 +15,10 @@
                                 <label for="password">Contraseña</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block mt-3">Iniciar Sesión</button>
-                            | 
-                            <a href="/api/session/github">Iniciar sesion con GitHub</a>
+                            <div style="display:flex; flex-direction: row; justify-content: space-around">
+                                <button type="submit" class="btn btn-primary btn-block mt-3">Iniciar Sesión</button>
+                                <a class="btn btn-dark btn-block mt-3" href="/api/session/github">Iniciar sesion con GitHub</a>
+                            </div>
                         </form>
                         <div class="text-center mt-3">
                             <p>¿No tienes una cuenta?</p>

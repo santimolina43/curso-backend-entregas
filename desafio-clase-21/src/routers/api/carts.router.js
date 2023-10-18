@@ -9,9 +9,9 @@ const cartsRouter = Router()
 cartsRouter.get('/:cid', async (req, res) => {
     const id = req.params.cid
     const cartFound = await cartModel.findOne({_id: id})
-    if (!cartFound) return res.status(404).json({ status:"error", payload: '[ERR] No se encontró ningun carrito con ese id'}) 
+    if (!cartFound) return res.status(404).json({ status:"error", payload: 'No se encontró ningun carrito con ese id'}) 
     res.status(200).json({ status: "success", payload: cartFound })
-    // const errorMsg = '[ERR] No se encontró ningun carrito con ese id';
+    // const errorMsg = 'No se encontró ningun carrito con ese id';
     // const productos = await cartManager.getCartProductsByID(id)
     // if (productos == errorMsg) return res.status(404).json({ status:"error", payload: productos})
     // res.status(200).json({ status: "success", payload: productos })
@@ -50,7 +50,7 @@ cartsRouter.put('/:cid', async (req, res) => {
     // Verifico que el carrito con ese id exista, y sino devuelvo error
     try { await cartModel.findOne({_id: id}) } 
     catch (error) {
-        return res.status(404).json({ status:"error", payload: '[ERR] No se encontró ningun carrito con el id: '+id})
+        return res.status(404).json({ status:"error", payload: 'No se encontró ningun carrito con el id: '+id})
     }
     // Recorro el array de productos y los añado al carrito 
     for (const product of products) {
@@ -71,7 +71,7 @@ cartsRouter.put('/:cid/products/:pid', async (req, res) => {
     // Verifico que el carrito con ese id exista, y sino devuelvo error
     try { await cartModel.findOne({_id: cartID}) } 
     catch (error) {
-        return res.status(404).json({ status:"error", payload: '[ERR] No se encontró ningun carrito con el id: '+cartID})
+        return res.status(404).json({ status:"error", payload: 'No se encontró ningun carrito con el id: '+cartID})
     }
     // Recorro el array de productos y los añado al carrito 
     const updatedCart = await cartManager.addProductToCart(cartID, productID, quantity, "set");
@@ -88,7 +88,7 @@ cartsRouter.delete('/:cid', async (req, res) => {
                                   {$set: {'products': []}})
     } 
     catch (error) {
-        return res.status(404).json({ status:"error", payload: '[ERR] No se encontró ningun carrito con el id: '+cartId})
+        return res.status(404).json({ status:"error", payload: 'No se encontró ningun carrito con el id: '+cartId})
     }
     res.status(200).json({ status: "success", payload: await cartManager.getCartByID(cartId) })
 })

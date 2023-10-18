@@ -11,7 +11,7 @@ registerForm.addEventListener('submit', async function(event) {
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     // Verifico que las contraseñas sean iguales
-    if (password !== confirmPassword) throw new Error('[ERR] Contraseñas diferentes');
+    if (password !== confirmPassword) throw new Error('Contraseñas diferentes');
     const newUser = {
         first_name: first_name,
         last_name: last_name,
@@ -30,7 +30,18 @@ registerForm.addEventListener('submit', async function(event) {
             }
         })
         if (response.ok) {
-            window.location.href = "/login";
+            Swal.fire({
+                icon: 'success',
+                title: `¡Bienvenido ${first_name}!`,
+                text: 'Te has registrado exitosamente',
+                showConfirmButton: true,
+                // footer: '<a href="">Why do I have this issue?</a>'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  // Redirige a /login cuando se hace clic en "OK"
+                  window.location.href = "/login";
+                }
+              });
         } else {
             throw new Error('No se pudo completar la solicitud: '+response);
         }

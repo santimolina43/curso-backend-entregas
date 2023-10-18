@@ -19,6 +19,9 @@ import profileRouter from './routers/views/profile.router.js'
 // DB Managers
 import ProductManager from './dao/mongoDB/ProductManager.js'
 import ChatManager from './dao/mongoDB/ChatManager.js'
+// Config
+import initializePassport from "./config/passport.config.js";
+
 
 const app = express()
 const productManager = new ProductManager()                               
@@ -28,11 +31,6 @@ const chatManager = new ChatManager()
 app.use(express.static('./src/public'))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-
-// Agregamos la inicializacion de passport
-initializePassport()
-app.use(passport.initialize())
-app.use(passport.session())
 
 // seteamos handlebars
 app.engine('handlebars', handlebars.engine())
@@ -50,6 +48,11 @@ app.use(session({
     saveUninitialized: false 
 }))
 
+// Agregamos la inicializacion de passport
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
+
 // views endpoints 
 app.use('/', homeRouter)
 app.use('/products', homeRouter)
@@ -62,7 +65,6 @@ app.use('/profile', profileRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
 app.use('/api/session', sessionRouter)
-
 
 // me conecto a la base de datos y al servidor local asincronicamente al mismo tiempo
 try {

@@ -31,10 +31,10 @@ class CartManager {
         await this.getCarts()
         // Verifico que el id de producto sea valido
         let productFound = await productManager.getProductByID(productID)
-        if (!productFound._id) return '[ERR] No existe ningun producto con el id: '+productID
+        if (!productFound._id) return 'No existe ningun producto con el id: '+productID
         // Busco el carrito en la base de datos y devuelvo error si no lo encuentro
         let cartFound = await this.getCartByID(cartID)
-        if (!cartFound) return '[ERR] No existe ningun carrito con el id: '+cartID
+        if (!cartFound) return 'No existe ningun carrito con el id: '+cartID
         // Busco el producto en el array de productos del carrito
         let productFoundInCart = cartFound.products.find(item => item.product.toString() === productFound._id.toString())
         if (productFoundInCart) {
@@ -46,7 +46,7 @@ class CartManager {
                 // Si encuentro el producto y el method es "set" entonces seteo la cantidad en quantity
                 await cartModel.updateOne({_id: cartID, 'products.product': productFound._id}, 
                                           {$set: {'products.$.quantity': quantity}})
-            } else return '[ERR] Please specify a valid method to add the products'
+            } else return 'Please specify a valid method to add the products'
         } 
         else {
             // Si no encuentro el producto entonces lo añado al carrito con cantidad quantity
@@ -62,10 +62,10 @@ class CartManager {
         await this.getCarts()
         // Verifico que el id de producto sea valido
         let productFound = await productManager.getProductByID(productID)
-        if (!productFound._id) return '[ERR] No existe ningun producto con ese id'
+        if (!productFound._id) return 'No existe ningun producto con ese id'
         // Busco el carrito en la base de datos y devuelvo error si no lo encuentro
         let cartFound = await this.getCartByID(cartID)
-        if (!cartFound) return '[ERR] No existe ningun carrito con ese id'
+        if (!cartFound) return 'No existe ningun carrito con ese id'
         // Busco el producto en el array de productos del carrito
         let productFoundInCart = cartFound.products.find(item => item.product.toString() === productFound._id.toString())
         if (productFoundInCart) {
@@ -75,7 +75,7 @@ class CartManager {
         }
         else {
             // Si no encuentro el producto entonces devuelvo error
-            return '[ERR] No existe ningun producto con ese id en el carrito'
+            return 'No existe ningun producto con ese id en el carrito'
         }
         return (await this.getCarts()).find(item => item._id.toString() === cartID)
     }
@@ -89,7 +89,7 @@ class CartManager {
         if (cartFound) {
             return cartFound
         } else {
-            return '[ERR] No se encontró ningun carrito con ese id'
+            return 'No se encontró ningun carrito con ese id'
         }
     }
 
@@ -107,7 +107,7 @@ class CartManager {
             }));
             return cartProducts
         } else {
-            return '[ERR] No se encontró ningun carrito con ese id'
+            return 'No se encontró ningun carrito con ese id'
         }
     }
 

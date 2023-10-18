@@ -14,7 +14,7 @@ class UserManager {
             if (users.length === 0) return [];
             this.#_users = users
         } catch (error) {
-            return '[ERR] Error al buscar los useros en la base de datos:'+error
+            return 'Error al buscar los useros en la base de datos:'+error
         }
         return this.#_users
     }   
@@ -23,13 +23,13 @@ class UserManager {
     async addUser(user) {
         // Compruebo que esten todos los campos necesarios
         if (!user.first_name||!user.last_name||!user.email||!user.age||!user.password) {
-            return '[ERR] No estan informados todos los campos necesarios para añadir el usuario'
+            return 'No estan informados todos los campos necesarios para añadir el usuario'
         }
         // Chequeo que el email no exista. Si existe, devuelvo error, sino, agrego el user a la bd
         try {
             const found = await userModel.findOne({email: user.email})     
             if(found) {
-                return '[ERR] Usuario ya existente.'
+                return 'Usuario ya existente.'
             } else {
                 // Creamos el user en la base de datos
                 let newuser = await userModel.create(user);
@@ -59,7 +59,7 @@ class UserManager {
                 isFound = true
             }
         })
-        if (!isFound) return '[ERR] No existe ningun usero con ese id'
+        if (!isFound) return 'No existe ningun usero con ese id'
         // Elimino el usero
         await userModel.deleteOne({_id: id})
         // Obtengo el nuevo array de useros desde la base de datos
@@ -72,7 +72,7 @@ class UserManager {
             const user = await this.getUserByField('email', emailValue)
             return user
         } catch (error) {
-            return '[ERR] Error al buscar el usuario a con email: '+emailValue
+            return 'Error al buscar el usuario a con email: '+emailValue
         }
     }
 
@@ -85,10 +85,10 @@ class UserManager {
             if (userFound) {
                 return userFound
             } else {
-                return '[ERR] No se encontró ningun user con '+propiedad+' = '+valor
+                return 'No se encontró ningun user con '+propiedad+' = '+valor
             }
         } catch (error) {
-            return '[ERR] Error al realizar la solicitud de busqueda de usuarios.'
+            return 'Error al realizar la solicitud de busqueda de usuarios.'
         }
     }
 

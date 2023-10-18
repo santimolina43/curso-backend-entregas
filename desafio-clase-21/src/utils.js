@@ -33,8 +33,6 @@ const authToken = (req, res, next) => {
         next();
     })
 } 
- 
-export default __dirname
 
 //helper function
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))

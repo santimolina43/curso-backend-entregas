@@ -26,7 +26,17 @@ homeRouter.get('/', publicRoutes, async (req, res) => {
             return response.json(); 
         })
         .then(products => {
-            res.render('home', { products, ...req.session.user })
+            const role = req.user.email === 'adminCoder@coder.com' 
+                ? 'admin'
+                : 'user'
+            const user = {
+                first_name: req.user.first_name,
+                last_name: req.user.last_name, 
+                email: req.user.email, 
+                age: req.user.age,
+                role: role
+            }
+            res.render('home', { products, ...user })
         })
         .catch(error => {
             console.error('Ocurrió un error:', error);
