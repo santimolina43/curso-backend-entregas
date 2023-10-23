@@ -48,8 +48,8 @@ productsRouter.get('/', async (req, res) => {
     page: products.page,
     hasPrevPage,
     hasNextPage,
-    prevLink: hasPrevPage ? `http://localhost:8080/?page=${page - 1}${queryParams}` : null,
-    nextLink: hasNextPage ? `http://localhost:8080/?page=${page + 1}${queryParams}` : null
+    prevLink: hasPrevPage ? `http://localhost:8080/?page=${prevPage}${queryParams}` : null,
+    nextLink: hasNextPage ? `http://localhost:8080/?page=${nextPage}${queryParams}` : null
     })
 })
 
