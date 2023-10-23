@@ -3,6 +3,11 @@ import jwt from 'jsonwebtoken'
 
 // Una PRIVATE_KEY sirve para utilizarse al momento de hacer el cifrado del token:
 const PRIVATE_KEY = "CoderKeyQueFuncionaComoUnSecret"
+export const ADMIN_EMAIL = 'adminCoder@coder.com';
+export const ADMIN_PASSWORD = 'adminCod3r123';
+export const CLIENT_ID = 'Iv1.c46505a98f4ce012';
+export const CLIENT_SECRET = '3adc760e54100eaba6aa7393b28febf797946f73';
+export const ADMIN_FALSE_ID = 'adminfalseid12345';
 
 // generateToken: al utlilzar jwt.sign:
 // El primer argumento es un objeto con la información

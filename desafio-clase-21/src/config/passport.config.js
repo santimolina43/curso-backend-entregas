@@ -1,8 +1,9 @@
 import passport from "passport"
 import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
-import { createHash, isValidPassword } from "../utils.js"
+import { createHash, isValidPassword, ADMIN_EMAIL, CLIENT_ID, CLIENT_SECRET, ADMIN_FALSE_ID} from "../helpers/auth-helpers.js"
 import UserModel from "../dao/mongoDB/models/users.model.js"
+
 
 const localStrategy = local.Strategy
 
@@ -32,7 +33,7 @@ const initializePassport = () => {
     passport.use('login', new localStrategy({
         usernameField: 'email',
     }, async(username, password, done) => {
-        if (username === 'adminCoder@coder.com') {
+        if (username === ADMIN_EMAIL) {
             const adminUser = {
                 first_name: 'Admin',
                 last_name: 'User',
@@ -55,8 +56,8 @@ const initializePassport = () => {
     }))
 
     passport.use('github', new GitHubStrategy({
-        clientID: 'Iv1.c46505a98f4ce012',
-        clientSecret: '3adc760e54100eaba6aa7393b28febf797946f73',
+        clientID: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
         callbackURL: 'http://localhost:8080/api/session/githubcallback'
     }, async(accessToken, refreshToken, profile, done) => {
         try {
@@ -85,9 +86,9 @@ const initializePassport = () => {
 
     passport.deserializeUser(async(user, done) => {
         if (!user._id) {
-            if (user.email === 'adminCoder@coder.com') {
+            if (user.email === ADMIN_EMAIL) {
                 const adminUser = {
-                    _id: 'adminfalseid12345',
+                    _id: ADMIN_FALSE_ID,
                     first_name: user.first_name,
                     last_name: user.last_name,
                     email: user.email,
