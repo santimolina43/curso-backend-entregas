@@ -1,0 +1,46 @@
+[
+	{
+		"id": 7,
+		"title": "Producto prueba",
+		"description": "Este es un producto prueba",
+		"price": 200,
+		"thumbnail": "http://localhost:8080/imgs/mosca.jpeg",
+		"code": "abc129",
+		"stock": 80,
+		"category": "moscas",
+		"status": true
+	},
+	{
+		"id": 17,
+		"title": "Mosca Ganadora",
+		"description": "Esta mosca se posteo desde el front",
+		"price": "2000",
+		"code": "#6796",
+		"stock": "20",
+		"category": "moscas",
+		"status": "true",
+		"thumbnail": "http://localhost:8080/imgs/mosca-ganadora.jpeg"
+	},
+	{
+		"id": 25,
+		"title": "Florwer Power",
+		"description": "El producto de la chila",
+		"price": "10000",
+		"code": "#2949",
+		"stock": "1",
+		"category": "motorhomes",
+		"status": "true",
+		"thumbnail": "http://localhost:8080/imgs/motorhome.jpeg"
+	},
+	{
+		"id": 26,
+		"title": "bullybuger",
+		"description": "mosca",
+		"price": "3000",
+		"code": "#6709",
+		"stock": "21",
+		"category": "moscas",
+		"status": true,
+		"thumbnail": "http://localhost:8080/imgs/mosca.jpeg"
+	}
+]
