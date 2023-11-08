@@ -1,10 +1,12 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import passport from 'passport';
+import crypto from 'crypto';
 
 // Una PRIVATE_KEY sirve para utilizarse al momento de hacer el cifrado del token:
 const PRIVATE_KEY = "CoderKeyQueFuncionaComoUnSecret"
 export const MONGO_DB_URL = 'mongodb+srv://santimolina43:SantiMolina43@huapi.hudzda5.mongodb.net/';
+// export const MONGO_DB_URL = "mongodb://127.0.0.1:27017";
 export const MONGO_DB_NAME = 'ecommerce';
 export const ADMIN_EMAIL = 'adminCoder@coder.com';
 export const ADMIN_PASSWORD = 'adminCod3r123';
@@ -26,8 +28,6 @@ export const generateToken = (user) => {
 // funcion para extraer el valor del token de la cookie
 // export const extractCookie = req => (req && req.cookies) ? req.cookies[JWT_COOKIE_NAME] : null
 export const extractCookie = (req) => {
-    console.log('estoy en el extract cookie')
-    console.log('req.signedCookies[JWT_COOKIE_NAME]: '+req.signedCookies[JWT_COOKIE_NAME])
     return (req && req.signedCookies) ? req.signedCookies[JWT_COOKIE_NAME] : null;
 }
 
@@ -53,17 +53,19 @@ export const authToken = (req, res, next) => {
 } 
 
 // funcion middleware para chequear si hay un usuario autenticado con passport.authenticate
-export const passportCall = strategy => {
+export const passportCall = (strategy, authenticateOptions) => {
     return async (req, res, next) => {
-        passport.authenticate(strategy, function(err, user, info) {
-            console.log('dentro del passportcall para: '+strategy)
-            console.log(err)
-            if (err) return next(err)
-            // console.log(user)
-            if (!user) return res.status(401).render('login', {error: 'No tengo token!' })
-            req.user = user
-            next()
-        })(req, res, next)
+        if (strategy == 'next') {next()}
+        else {
+            // Verifica si se proporcionó una opcion de autenticacion y ajusta la estrategia en consecuencia
+            const authenticateOptionsParameter = authenticateOptions ? authenticateOptions : {};
+            await passport.authenticate(strategy, authenticateOptionsParameter, function(err, user, info) {
+                if (err) return next(err)
+                if (!user) return res.status(401).render('login', {error: 'No tengo token!' })
+                req.user = user
+                next()
+            })(req, res, next)
+        }
     }
 }
 
@@ -77,9 +79,23 @@ export const handlePolicies = policies => (req, res, next) => {
     return next()
 }
 
+// Genera un string aleatorio de length caracteres
+export function generateRandomString(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    const randomIndex = crypto.randomInt(0, charactersLength);
+    randomString += characters.charAt(randomIndex);
+  }
+  return randomString;
+}
+
 
 //helper function
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+// export const createHash = password => password
 
 //helper function
 export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password)
+// export const isValidPassword = (user, password) => true
