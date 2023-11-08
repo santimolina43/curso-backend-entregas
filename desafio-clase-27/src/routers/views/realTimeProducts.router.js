@@ -1,10 +1,15 @@
-import { Router } from 'express'
-import { publicRoutes } from '../../middlewares/auth.middleware.js'
+import RouterClass from '../router.js';
 
-const realtimeproductsRouter = Router()
+export default class RealTimeProductsRouter extends RouterClass {
+    init() {
 
-realtimeproductsRouter.get('/', publicRoutes, (req, res) => {
-    res.render('realTimeProducts', {})
-})
+        /************************************/   
+        /************** VISTAS **************/   
+        /************************************/ 
 
-export default realtimeproductsRouter
+        /********* REAL TIME PRODUCTS *********/   
+        this.get('/', ["PUBLIC"], 'next', {}, (req, res) => {
+            res.render('realTimeProducts', {})
+        })
+    }
+}

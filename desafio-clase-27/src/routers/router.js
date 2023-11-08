@@ -1,7 +1,6 @@
 import {Router} from 'express';
 import jwt from 'jsonwebtoken';
-import passport from 'passport';
-import { JWT_COOKIE_NAME, JWT_PRIVATE_KEY, passportCall } from '../helpers/auth-helpers.js';
+import { JWT_COOKIE_NAME, JWT_PRIVATE_KEY, passportCall } from '../middlewares/auth-helpers.js';
 
 // Crear el router como un objeto creando una clase es otra forma de hacerlo y es totalmente valida
 // y sirve para hacer toda la programacion orientada a objetos
@@ -15,38 +14,28 @@ export default class RouterClass{
     }
     init(){} // Esta inicializacion sera para sus clases heredadas
 
-    get(path, policies, ...callbacks) { // policies será un array con los roles aceptados en cada ruta
-        this.router.get(path, this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+    get(path, policies, authInstance, authOptions, ...callbacks) { // policies será un array con los roles aceptados en cada ruta
+        this.router.get(path, passportCall(authInstance, authOptions), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
     };
-    post(path, policies, authInstance, ...callbacks) {
-        this.router.post(path, passportCall(authInstance),
-        this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+    post(path, policies, authInstance, authOptions, ...callbacks) {
+        this.router.post(path, passportCall(authInstance, authOptions), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
     }
-    // post(path, policies, ...callbacks) {
-    //     this.router.post(path, this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
-    // }
-    put(path, policies, ...callbacks) {
-        this.router.put(path, this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+    put(path, policies, authInstance, authOptions, ...callbacks) {
+        this.router.put(path, passportCall(authInstance, authOptions), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
     }
-    delete(path, policies, ...callbacks) {
-        this.router.delete(path, this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+    delete(path, policies, authInstance, authOptions, ...callbacks) {
+        this.router.delete(path, passportCall(authInstance, authOptions), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
     }
     
-    // metodo que ejecutará todas las funciones callbacks del router, aunque principalmente la funcion callback que 
-    // tenemos casi siempre es la propia funcion que ejecuta cada router:
-            // (req, res) => {
-            //     res.sendSuccess("Hola Coders!");
-            // }
+
     applyCallbacks(callbacks) {
         // mapearemos los callbacks uno a uno, obteniendo todos sus parámetros a partir de ...
-        // console.log('entro al apply callbacks 1')
         return callbacks.map((callback) => async (...params) => {
             try {
                 // apply, ejecutará la funcion callback apuntando directamente a una instancia de la
                 // clase, por elo, colocamos this para que se utilice sólo en el contexto de este router,
                 // los parámetros son internos de cada callback, sabemos que los params de un callback
                 // corresponden a req, res y next
-                console.log('entro al apply callbacks')
                 await callback.apply(this, params)
             } catch (error) {
                 console.log(error)
@@ -57,7 +46,6 @@ export default class RouterClass{
     }
 
     generateCustomResponses = (req, res, next) => {
-        console.log('entro al generateCustomResponses')
         // sendSuccess permitirá que el desarrollador sólo tenga que enviar el payload,
         // ya que el formato se gestionará de manera interna.
         res.sendSuccess = payload => res.send({status: "success", payload})
@@ -69,7 +57,6 @@ export default class RouterClass{
     // middleware que comprueba que el usuario tenga un rol que este permitido para entrar
     // a la ruta a la que se esta queriendo acceder
     handlePolicies = policies => (req, res, next) => {
-        console.log('entro al handle policies')
         if (policies[0] === "PUBLIC") return next(); // Cualquiera puede entrar
         // puedo enviar el token en el header de la peticion:
                 // const authHeaders = req.headers.authorization;
@@ -77,11 +64,10 @@ export default class RouterClass{
                 // const token = authHeaders.split(" ")[1]; // Removemos el Bearer
         // o puedo enviar el token en una cookie:
         const token = req.signedCookies[JWT_COOKIE_NAME]
-        if (!token) return res.send('Not Authenticated')
+        if (!token) return res.render('login')
         // Obtenemos el usuario a partir del token
         let user = jwt.verify(token, JWT_PRIVATE_KEY) // verifico que el token tenga bien la palabra secreta de firma
         // ¿El rol del usuario eciste dentro del arreglo de políticas?
-        console.log(user.role.toUpperCase())
         if (!policies.includes(user.role.toUpperCase())) return res.status(403).send({error: "Unauthorized"})
         req.user = user;
         next();

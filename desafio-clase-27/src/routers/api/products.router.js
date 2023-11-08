@@ -1,10 +1,8 @@
 import Router from 'express'
 import ProductManager from '../../dao/mongoDB/ProductManager.js'
-import { socketServer } from '../../app.js'
+// import { socketServer } from '../../app.js'
 import multer from 'multer'
 import productModel from '../../dao/mongoDB/models/products.model.js'
-
-const products = []
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -21,7 +19,6 @@ const productManager = new ProductManager()
 
 /********* GET PRODUCTS *********/    
 productsRouter.get('/', async (req, res) => {
-    console.log('dentro del api/products router .get')
     // Query params opcionales para limitar, elegir la pagina y ordenar los documentos
     const { limit, page, sort } = req.query
     const filters = {limit: limit, page: page, sort: {price: sort}}
@@ -70,7 +67,7 @@ productsRouter.post('/',  uploader.single('thumbnail'), async (req, res) => {
         const newProduct = await productManager.addProduct(req.body)
         if (!newProduct._id) return res.status(400).json({ status:"error", payload: newProduct})
         // Emito un evento de Socket.io para notificar a todos los clientes conectados sobre la adicion
-        socketServer.emit('productsHistory', await productManager.getProducts())
+        // socketServer.emit('productsHistory', await productManager.getProducts())
         res.status(200).json({ status: "success", payload: newProduct })
     } catch (error) {
         return res.status(400).json({ status:"error", payload: 'Error al añadir el carrito'})

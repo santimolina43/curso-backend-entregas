@@ -2,7 +2,7 @@ import passport from "passport"
 import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
 import passport_jwt from 'passport-jwt'
-import { generateToken, extractCookie, createHash, isValidPassword, JWT_PRIVATE_KEY, JWT_COOKIE_NAME, ADMIN_EMAIL, CLIENT_ID, CLIENT_SECRET, ADMIN_FALSE_ID, ADMIN_PASSWORD} from "../helpers/auth-helpers.js"
+import { generateToken, generateRandomString, extractCookie, createHash, isValidPassword, JWT_PRIVATE_KEY, JWT_COOKIE_NAME, ADMIN_EMAIL, CLIENT_ID, CLIENT_SECRET, ADMIN_FALSE_ID, ADMIN_PASSWORD} from "../middlewares/auth-helpers.js"
 import UserModel from "../dao/mongoDB/models/users.model.js"
 import CartManager from "../dao/mongoDB/CartManager.js"
 
@@ -41,7 +41,6 @@ const initializePassport = () => {
     passport.use('login', new localStrategy({
         usernameField: 'email',
     }, async(username, password, done) => {
-        console.log('paso por aca 0')
         if (username === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
             const adminUser = {
                 first_name: 'Admin',
@@ -63,9 +62,7 @@ const initializePassport = () => {
             // generamos el token con el user que inicia sesion
             const token = generateToken(user)
             // agregamos el token al user
-            console.log('paso por aca')
-            user.token = token            
-            // console.log(user)
+            user.token = token   
             return done(null, user)
         } catch(err) {}
     }))
@@ -73,26 +70,24 @@ const initializePassport = () => {
     passport.use('github', new GitHubStrategy({
         clientID: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
-        callbackURL: 'http://localhost:8080/api/session/githubcallback'
+        callbackURL: 'http://localhost:8080/session/githubcallback'
     }, async(accessToken, refreshToken, profile, done) => {
         try {
-            console.log(profile) // Recomendado hacer un console.log de toda la informacion
-                                 // que viene del perfil
-            const user = await UserModel.findOne({ email: profile._json.email })
+            const user = await UserModel.findOne({ email: profile._json.login+'@gmail.com' })
             if (user) return done(null, user) // si el usuario ya existe entonces devolvemos
                                               // null, user 
             // si el usuario no existia en nuestro sitio web, lo agregamos a la base de datos
             const newCart = await cartManager.addCart([])
-            const newUser = await UserModel.create({
+            const newUser = {
                 first_name: profile._json.login, 
-                last_name: '', // notar como nos toca rellenar los datos que no vienen desde el perfil
-                age:18, // notar como nos toca rellenar los datos que no vienen desde el perfil
+                last_name: profile._json.login+'slastname', // notar como nos toca rellenar los datos que no vienen desde el perfil
                 email: profile._json.login+'@gmail.com',
-                password: '', // al ser autenticacion de terceros, no podemos asignar un password
-                cart: newCart._id,
-                role: 'user'
-            })
-            return done(null, newUser)
+                age:18, // notar como nos toca rellenar los datos que no vienen desde el perfil
+                password: createHash(generateRandomString(10)), // al ser autenticacion de terceros, no podemos asignar un password
+                cart: newCart._id
+            }
+            const result = await UserModel.create(newUser)
+            return done(null, result)
         } catch(err) {
             return done('Error to login with github')
         }
@@ -103,8 +98,6 @@ const initializePassport = () => {
         jwtFromRequest: passport_jwt.ExtractJwt.fromExtractors([extractCookie]),
         secretOrKey: JWT_PRIVATE_KEY
     }, async(jwt_payload, done) => {
-        console.log('ya dentro de la funcion de la estrategia jwt')
-        console.log(jwt_payload)
         done(null, jwt_payload)
     }))
 

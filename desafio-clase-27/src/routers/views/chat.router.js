@@ -1,20 +1,29 @@
-import { Router } from 'express'
+import RouterClass from '../router.js';
 import ChatManager from '../../dao/mongoDB/ChatManager.js'
-import { publicRoutes } from '../../middlewares/auth.middleware.js'
 
 const chatManager = new ChatManager()
-const chatRouter = Router()
 
-/********* GET MESSAGES *********/    
-chatRouter.get('/', publicRoutes, (req, res) => {
-    res.render('chat', {}) // de momento solo renderizamos la vista, sin pasarle ningun objeto
-})
+export default class ChatRouter extends RouterClass {
+    init() {
 
-/********* POST MESSAGES *********/    
-chatRouter.post('/api/messages', async (req, res) => {
-    const newMessage = await chatManager.addMessage(req.body)
-    if (!newMessage._id) return res.status(400).json({ status:"error", payload: newMessage})
-    res.status(200).json({ status: "success", payload: newMessage })
-})
+        /************************************/   
+        /************** VISTAS **************/   
+        /************************************/ 
 
-export default chatRouter
+        /********* CHAT *********/   
+        this.get('/', ["USER", "ADMIN", "PREMIUM"], 'next', {}, (req, res) => {
+            res.render('chat', {}) // de momento solo renderizamos la vista, sin pasarle ningun objeto
+        })
+
+        /************************************/   
+        /*************** API ****************/   
+        /************************************/ 
+        
+        /********* POST MESSAGES *********/   
+        this.post('/api/messages', ["USER", "ADMIN", "PREMIUM"], 'next', {}, async (req, res) => {
+            const newMessage = await chatManager.addMessage(req.body)
+            if (!newMessage._id) return res.status(400).json({ status:"error", payload: newMessage})
+            res.status(200).json({ status: "success", payload: newMessage })
+        })
+    }
+}
