@@ -8,31 +8,41 @@ productForm.addEventListener('submit', async function(event) {
     const formData = new FormData(productForm);
     // Realizo una solicitud AJAX (fetch) para enviar los datos al servidor
     try {
-        const response = await fetch('/api/products', {
+        await fetch('/api/products', {
             method: 'POST',
             body: formData,
         })
-        if (response.ok) {
-            const title = document.getElementById('title');
-            const description = document.getElementById('description');
-            const price = document.getElementById('price');
-            const thumbnail = document.getElementById('thumbnail');
-            const code = document.getElementById('code');
-            const stock = document.getElementById('stock');
-            const category = document.getElementById('category');
-            title.value = "" 
-            description.value = "" 
-            price.value = "" 
-            thumbnail.value = "" 
-            code.value = "" 
-            stock.value = "" 
-            category.value = "" 
-        } else {
-            throw new Error('No se pudo completar la solicitud: '+response);
-        }
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'error') {
+                    // Mostramos el mensaje de error al usuario
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.error
+                    })
+                } else {
+                    socketClient.emit('deletedOrAddedProduct');
+                    const title = document.getElementById('title');
+                    const description = document.getElementById('description');
+                    const price = document.getElementById('price');
+                    const thumbnail = document.getElementById('thumbnail');
+                    const code = document.getElementById('code');
+                    const stock = document.getElementById('stock');
+                    const category = document.getElementById('category');
+                    title.value = "" 
+                    description.value = "" 
+                    price.value = "" 
+                    thumbnail.value = "" 
+                    code.value = "" 
+                    stock.value = "" 
+                    category.value = "" 
+                }
+            })
+            .catch(error => console.error('Error en la solicitud:'+ error))
     }
     catch (error) {
-            console.error('Error en la solicitud:', error);
+        console.error(error);
     };
 });
 
@@ -42,7 +52,7 @@ function deleteProduct(pid) {
     })
         .then(response => {
             if (response.ok) {
-                null
+                socketClient.emit('deletedOrAddedProduct');
             } else {
                 throw new Error('No se pudo completar la solicitud.');
             }

@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import jwt from 'jsonwebtoken';
-import { JWT_COOKIE_NAME, JWT_PRIVATE_KEY, passportCall } from '../middlewares/auth-helpers.js';
+import { passportCall } from '../middlewares/auth-helpers.js';
+import { env_parameters_obj } from '../app.js';
 
 // Crear el router como un objeto creando una clase es otra forma de hacerlo y es totalmente valida
 // y sirve para hacer toda la programacion orientada a objetos
@@ -63,10 +64,10 @@ export default class RouterClass{
                 // if (!authHeaders) return res.status(401).send({status: "error", error: "Unauthorized"});
                 // const token = authHeaders.split(" ")[1]; // Removemos el Bearer
         // o puedo enviar el token en una cookie:
-        const token = req.signedCookies[JWT_COOKIE_NAME]
+        const token = req.signedCookies[env_parameters_obj.jwt.jwtCookieName]
         if (!token) return res.render('login')
         // Obtenemos el usuario a partir del token
-        let user = jwt.verify(token, JWT_PRIVATE_KEY) // verifico que el token tenga bien la palabra secreta de firma
+        let user = jwt.verify(token, env_parameters_obj.jwt.jwtPrivateKey) // verifico que el token tenga bien la palabra secreta de firma
         // ¿El rol del usuario eciste dentro del arreglo de políticas?
         if (!policies.includes(user.role.toUpperCase())) return res.status(403).send({error: "Unauthorized"})
         req.user = user;

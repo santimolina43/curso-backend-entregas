@@ -5,19 +5,27 @@ import mongoose from 'mongoose'
 import session from 'express-session'
 import passport from "passport";
 import cookieParser from "cookie-parser";
+import { Command } from 'commander'
 import run from './run.js'
 import initializePassport from "./config/passport.config.js";
-import { JWT_PRIVATE_KEY, MONGO_DB_NAME, MONGO_DB_URL } from './middlewares/auth-helpers.js'
+import {env_parameters} from './config/env.config.js'
 
+// configuramos variables de entorno
+const program = new Command()
+program
+    .option('-p <port>', 'Puerto del servidor', 8080) 
+    .option('--mode <mode>', 'Modo de ejecución', 'PRODUCTION')
+program.parse()
+export const env_parameters_obj = env_parameters(program.opts().mode)
+
+// configuramos el servidor web con express
 const app = express()                       
-
-// configuramos el servidor web para que serva archivos estáticos desde la carpeta public
 app.use(express.static('./src/public'))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 // configuramos cookie parser
-app.use(cookieParser(JWT_PRIVATE_KEY))
+app.use(cookieParser(env_parameters_obj.jwt.jwtPrivateKey))
 
 // seteamos handlebars
 app.engine('handlebars', handlebars.engine())
@@ -37,12 +45,12 @@ app.use(passport.session())
 
 // me conecto a la base de datos y al servidor local asincronicamente al mismo tiempo
 try {
-    await mongoose.connect(MONGO_DB_URL, {
-        dbName: MONGO_DB_NAME
+    await mongoose.connect(env_parameters_obj.mongoDB.uri, {
+        dbName: env_parameters_obj.mongoDB.name
     })
     console.log('DB Conected!')
     // abrimos el servidor y lo conectamos con socketServer
-    const httpServer = app.listen(8080, () => console.log('HTTP Server Up!'))
+    const httpServer = app.listen(env_parameters_obj.app.port, () => console.log(`HTTP Server Up on port ${env_parameters_obj.app.port}! (${env_parameters_obj.app.persistence})`))
     const socketServer = new Server (httpServer)
     httpServer.on("error", (e) => console.log("ERROR: " + e))
     // corro los routers

@@ -1,7 +1,5 @@
 import RouterClass from '../router.js';
-import ChatManager from '../../dao/mongoDB/ChatManager.js'
-
-const chatManager = new ChatManager()
+import { getChatView, postMessage } from '../../controllers/chat.controller.js';
 
 export default class ChatRouter extends RouterClass {
     init() {
@@ -11,19 +9,13 @@ export default class ChatRouter extends RouterClass {
         /************************************/ 
 
         /********* CHAT *********/   
-        this.get('/', ["USER", "ADMIN", "PREMIUM"], 'next', {}, (req, res) => {
-            res.render('chat', {}) // de momento solo renderizamos la vista, sin pasarle ningun objeto
-        })
+        this.get('/', ["USER", "ADMIN", "PREMIUM"], 'next', {}, getChatView)
 
         /************************************/   
         /*************** API ****************/   
         /************************************/ 
         
         /********* POST MESSAGES *********/   
-        this.post('/api/messages', ["USER", "ADMIN", "PREMIUM"], 'next', {}, async (req, res) => {
-            const newMessage = await chatManager.addMessage(req.body)
-            if (!newMessage._id) return res.status(400).json({ status:"error", payload: newMessage})
-            res.status(200).json({ status: "success", payload: newMessage })
-        })
+        this.post('/api/messages', ["USER", "ADMIN", "PREMIUM"], 'next', {}, postMessage)
     }
 }

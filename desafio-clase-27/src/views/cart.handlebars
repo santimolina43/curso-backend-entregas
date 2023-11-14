@@ -22,8 +22,8 @@
             <th>Acciones</th>
             </tr>
         </thead>
-        <tbody>
-            {{#each cartProducts.payload.products}}
+        <tbody id="table_body">
+            {{#each cart.products}}
             <tr>
             <td>
                 <img src="{{this.product.thumbnail}}" alt="{{this.product.title}}" class="img-thumbnail" width="100">
@@ -42,7 +42,7 @@
             </td>
             <td>${{this.quantity}}*{{this.product.price}}</td>
             <td>
-                <button class="btn btn-danger" onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
+                <button class="btn btn-danger" onclick="deleteProductFromCart('{{../cart._id}}','{{this.product._id}}')">Eliminar</button>
             </td>
             </tr>
             {{/each}}
@@ -57,3 +57,5 @@
 </div>
 
 <script src="/js/home.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/cart.js"></script>

@@ -1,6 +1,4 @@
 function addProductToCart(cart_id, product_id) {
-    console.log(cart_id)
-    console.log(product_id)
     fetch(`/api/carts/${cart_id}/product/${product_id}`, {
         method: 'POST'
     })

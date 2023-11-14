@@ -14,7 +14,6 @@ Swal.fire({
 
     let chatbox = document.getElementById('chatbox')
     
-    
     chatbox.addEventListener('keyup', async (evt) => {
         if (evt.key === "Enter") {
             if (chatbox.value.trim().length > 0) { 

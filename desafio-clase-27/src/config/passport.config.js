@@ -2,11 +2,12 @@ import passport from "passport"
 import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
 import passport_jwt from 'passport-jwt'
-import { generateToken, generateRandomString, extractCookie, createHash, isValidPassword, JWT_PRIVATE_KEY, JWT_COOKIE_NAME, ADMIN_EMAIL, CLIENT_ID, CLIENT_SECRET, ADMIN_FALSE_ID, ADMIN_PASSWORD} from "../middlewares/auth-helpers.js"
-import UserModel from "../dao/mongoDB/models/users.model.js"
-import CartManager from "../dao/mongoDB/CartManager.js"
+import { generateToken, generateRandomString, extractCookie, createHash, isValidPassword} from "../middlewares/auth-helpers.js"
+import {env_parameters_obj} from '../app.js'
+import UserModel from "../dao/users.model.js"
+import CartService from "../services/cart.service.js"
 
-const cartManager = new CartManager()
+const cartService = new CartService()
 const localStrategy = local.Strategy
 const JWTStrategy = passport_jwt.Strategy
 
@@ -22,7 +23,7 @@ const initializePassport = () => {
             if (user) {
                 return done(null, false)
             }
-            const newCart = await cartManager.addCart([])
+            const newCart = await cartService.addCart([])
             const newUser = {
                 first_name, 
                 last_name, 
@@ -41,7 +42,10 @@ const initializePassport = () => {
     passport.use('login', new localStrategy({
         usernameField: 'email',
     }, async(username, password, done) => {
-        if (username === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        console.log('aca estoy broder')
+        console.log(username)
+        console.log(env_parameters_obj.admin.adminEmail)
+        if (username === env_parameters_obj.admin.adminEmail && password === env_parameters_obj.admin.adminPassword) {
             const adminUser = {
                 first_name: 'Admin',
                 last_name: 'User',
@@ -68,8 +72,8 @@ const initializePassport = () => {
     }))
 
     passport.use('github', new GitHubStrategy({
-        clientID: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
+        clientID: env_parameters_obj.gitHub.clientId,
+        clientSecret: env_parameters_obj.gitHub.clientSecret,
         callbackURL: 'http://localhost:8080/session/githubcallback'
     }, async(accessToken, refreshToken, profile, done) => {
         try {
@@ -77,7 +81,7 @@ const initializePassport = () => {
             if (user) return done(null, user) // si el usuario ya existe entonces devolvemos
                                               // null, user 
             // si el usuario no existia en nuestro sitio web, lo agregamos a la base de datos
-            const newCart = await cartManager.addCart([])
+            const newCart = await cartService.addCart([])
             const newUser = {
                 first_name: profile._json.login, 
                 last_name: profile._json.login+'slastname', // notar como nos toca rellenar los datos que no vienen desde el perfil
@@ -96,7 +100,7 @@ const initializePassport = () => {
     // estrategia para extraer la cookie del usuairo iniciado en session y verificarlo
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: passport_jwt.ExtractJwt.fromExtractors([extractCookie]),
-        secretOrKey: JWT_PRIVATE_KEY
+        secretOrKey: env_parameters_obj.jwt.jwtPrivateKey
     }, async(jwt_payload, done) => {
         done(null, jwt_payload)
     }))
@@ -108,9 +112,9 @@ const initializePassport = () => {
 
     passport.deserializeUser(async(user, done) => {
         if (!user._id) {
-            if (user.email === ADMIN_EMAIL) {
+            if (user.email === env_parameters_obj.admin.adminEmail) {
                 const adminUser = {
-                    _id: ADMIN_FALSE_ID,
+                    _id: env_parameters_obj.admin.adminFalseId,
                     first_name: user.first_name,
                     last_name: user.last_name,
                     email: user.email,

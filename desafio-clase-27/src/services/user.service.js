@@ -1,6 +1,6 @@
-import userModel from './models/users.model.js'
+import userModel from '../dao/users.model.js'
 
-class UserManager {
+class UserService {
     #_users
     constructor() {
         this.#_users = []
@@ -95,4 +95,4 @@ class UserManager {
 }
 
 
-export default UserManager;
+export default UserService;

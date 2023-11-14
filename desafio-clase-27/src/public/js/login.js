@@ -38,37 +38,3 @@ loginForm.addEventListener('submit', async function(event) {
 const register = (req, res) => {
     res.redirect('/login/register')
 }
-
-// const loginWithGithub = () => {
-//     const email = 'peperoni.com';
-//     const password = 'nose';
-//     const loginUser = {
-//         email: email,
-//         password: password
-//     }
-//     const loginUserJSON = JSON.stringify(loginUser)
-//     try {
-//         const response = fetch('/session/github', {
-//             method: 'POST',
-//             body: loginUserJSON,
-//             headers: {
-//                 'Content-Type': 'application/json' // Indica que estás enviando JSON
-//             }
-//         })
-//         if (response.ok) {
-//             window.location.href = "/";
-//         } else {
-//             console.log('response')
-//             console.log(response)
-//             throw new Error('No se pudo completar la solicitud de Github: '+response);
-//         }
-//     }
-//     catch (error) {
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Oops...',
-//             text: 'Something went wrong!'+error,
-//             footer: '<a href="">Why do I have this issue?</a>'
-//           })
-//     };
-// }

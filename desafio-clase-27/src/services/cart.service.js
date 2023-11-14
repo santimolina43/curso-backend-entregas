@@ -1,9 +1,9 @@
-import ProductManager from './ProductManager.js'
-import cartModel from './models/carts.model.js'
+import ProductService from './product.service.js'
+import cartModel from '../dao/carts.model.js'
 
-const productManager = new ProductManager('./data/products.json')
+const productService = new ProductService('./data/products.json')
 
-class CartManager {
+class CartService {
     #_carts
     constructor() {
         this.#_carts = []
@@ -30,7 +30,7 @@ class CartManager {
         // Obtengo el array de carritos de la base de datos
         await this.getCarts()
         // Verifico que el id de producto sea valido
-        let productFound = await productManager.getProductByID(productID)
+        let productFound = await productService.getProductByID(productID)
         if (!productFound._id) return 'No existe ningun producto con el id: '+productID
         // Busco el carrito en la base de datos y devuelvo error si no lo encuentro
         let cartFound = await this.getCartByID(cartID)
@@ -61,13 +61,13 @@ class CartManager {
         // Obtengo el array de carritos de la base de datos
         await this.getCarts()
         // Verifico que el id de producto sea valido
-        let productFound = await productManager.getProductByID(productID)
+        let productFound = await productService.getProductByID(productID)
         if (!productFound._id) return 'No existe ningun producto con ese id'
         // Busco el carrito en la base de datos y devuelvo error si no lo encuentro
         let cartFound = await this.getCartByID(cartID)
         if (!cartFound) return 'No existe ningun carrito con ese id'
         // Busco el producto en el array de productos del carrito
-        let productFoundInCart = cartFound.products.find(item => item.product.toString() === productFound._id.toString())
+        let productFoundInCart = cartFound.products.find(item => item.product._id.toString() === productFound._id.toString())
         if (productFoundInCart) {
             // Si encuentro el producto, lo elimino
             await cartModel.findOneAndUpdate({_id: cartID}, 
@@ -82,10 +82,8 @@ class CartManager {
 
     /********* GET CART BY ID *********/
     async getCartByID(idValue) {
-        // Obtengo el array de carritos desde el archivo
-        await this.getCarts()
         // Busco el carrito a traves del id en el array
-        const cartFound = this.#_carts.find(item => item._id.toString() === idValue)
+        const cartFound = await cartModel.findOne({_id: idValue})
         if (cartFound) {
             return cartFound
         } else {
@@ -102,7 +100,7 @@ class CartManager {
         if (cartFound) {
             // Mapeo de productos usando Promise.all()
             const cartProducts = await Promise.all(cartFound.products.map(async item => {
-                const product = await productManager.getProductByID(item.product.toString());
+                const product = await productService.getProductByID(item.product.toString());
                 return product;
             }));
             return cartProducts
@@ -111,6 +109,13 @@ class CartManager {
         }
     }
 
+    /********* DELETE ALL PRODUCTS FROM CART BY ID *********/
+    async deleteAllProductsFromCartById(cartId) {
+        // Seteo el array de products a '[]' para el carrito 
+        await cartModel.updateOne({_id: cartId},
+                                  {$set: {'products': []}})
+    }
+
 }
 
-export default CartManager;
+export default CartService;

@@ -1,4 +1,5 @@
 import RouterClass from '../router.js';
+import { getRealTimeProducts } from '../../controllers/product.controller.js';
 
 export default class RealTimeProductsRouter extends RouterClass {
     init() {
@@ -8,8 +9,6 @@ export default class RealTimeProductsRouter extends RouterClass {
         /************************************/ 
 
         /********* REAL TIME PRODUCTS *********/   
-        this.get('/', ["PUBLIC"], 'next', {}, (req, res) => {
-            res.render('realTimeProducts', {})
-        })
+        this.get('/', ["PUBLIC"], 'next', {}, getRealTimeProducts)
     }
 }

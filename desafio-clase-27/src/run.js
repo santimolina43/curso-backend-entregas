@@ -8,14 +8,16 @@ import HomeRouter from './routers/views/home.router.js'
 import RealTimeProductsRouter from './routers/views/realTimeProducts.router.js'
 import ChatRouter from './routers/views/chat.router.js'
 import ProfileRouter from './routers/views/profile.router.js'
-// DB Managers
-import ProductManager from './dao/mongoDB/ProductManager.js'
-import ChatManager from './dao/mongoDB/ChatManager.js'
+// DB Services
+import ProductService from './services/product.service.js'
+import ChatService from './services/chat.service.js'
+import CartService from './services/cart.service.js'
 
 // Inicializo Clases
-// Managers
-const productManager = new ProductManager()                               
-const chatManager = new ChatManager()  
+// Services
+const productService = new ProductService()                               
+const chatService = new ChatService()  
+const cartService = new CartService()
 // Routers
 const sessionsRouter = new SessionsRouter();                             
 const cartRouter = new CartRouter();                             
@@ -44,10 +46,17 @@ const run = (socketServer, app) => {
 
     socketServer.on('connection', async (socketClient) => {
         console.log('Socket Server UP!')
-        socketServer.emit('productsHistory', await productManager.getProducts())
-        socketServer.emit('messagesHistory', await chatManager.getMessages())
+        socketServer.emit('productsHistory', await productService.getProducts())
+        socketServer.emit('messagesHistory', await chatService.getMessages())
+        socketClient.on('deletedOrAddedProduct', async () => {
+            socketServer.emit('productsHistory', await productService.getProducts())
+        })
         socketClient.on('message', async () => {
-            socketServer.emit('messagesHistory', await chatManager.getMessages())
+            socketServer.emit('messagesHistory', await chatService.getMessages())
+        })
+        socketClient.on('deletedOrAddedProductToCart', async (cid) => {
+            const productsInCart = await cartService.getCartByID(cid)
+            socketServer.emit('cartProductsHistory', productsInCart)
         })
     })
 }

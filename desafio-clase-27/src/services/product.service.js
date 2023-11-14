@@ -1,4 +1,4 @@
-import productModel from './models/products.model.js'
+import productModel from '../dao/products.model.js'
 
 class ProductManager {
     #_products
@@ -81,6 +81,11 @@ class ProductManager {
         }
     }
 
+    /********* PAGINATE PRODUCTS *********/
+    async paginateProducts(query, filters) {
+        const products = await productModel.paginate(query, filters)
+        return products
+    }
 }
 
 
