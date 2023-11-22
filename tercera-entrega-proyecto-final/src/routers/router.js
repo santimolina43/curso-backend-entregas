@@ -16,16 +16,32 @@ export default class RouterClass{
     init(){} // Esta inicializacion sera para sus clases heredadas
 
     get(path, policies, authInstance, authOptions, ...callbacks) { // policies será un array con los roles aceptados en cada ruta
-        this.router.get(path, passportCall(authInstance, authOptions), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+        this.router.get(path, 
+                        passportCall(authInstance, authOptions), 
+                        this.handlePolicies(policies), 
+                        this.generateCustomResponses, 
+                        this.applyCallbacks(callbacks));
     };
     post(path, policies, authInstance, authOptions, ...callbacks) {
-        this.router.post(path, passportCall(authInstance, authOptions), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+        this.router.post(path, 
+                         passportCall(authInstance, authOptions), 
+                         this.handlePolicies(policies), 
+                         this.generateCustomResponses, 
+                         this.applyCallbacks(callbacks));
     }
     put(path, policies, authInstance, authOptions, ...callbacks) {
-        this.router.put(path, passportCall(authInstance, authOptions), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+        this.router.put(path, 
+                        passportCall(authInstance, authOptions), 
+                        this.handlePolicies(policies), 
+                        this.generateCustomResponses, 
+                        this.applyCallbacks(callbacks));
     }
     delete(path, policies, authInstance, authOptions, ...callbacks) {
-        this.router.delete(path, passportCall(authInstance, authOptions), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+        this.router.delete(path, 
+                           passportCall(authInstance, authOptions), 
+                           this.handlePolicies(policies), 
+                           this.generateCustomResponses, 
+                           this.applyCallbacks(callbacks));
     }
     
 
@@ -41,7 +57,7 @@ export default class RouterClass{
             } catch (error) {
                 console.log(error)
                 // params[1] hace referencia a res, por ello puedo mandar un send desde éste
-                params[1].status(500).send(error)
+                params[1].status(500).send({status: "error", error: error})
             }
         })
     }
@@ -69,7 +85,7 @@ export default class RouterClass{
         // Obtenemos el usuario a partir del token
         let user = jwt.verify(token, env_parameters_obj.jwt.jwtPrivateKey) // verifico que el token tenga bien la palabra secreta de firma
         // ¿El rol del usuario eciste dentro del arreglo de políticas?
-        if (!policies.includes(user.role.toUpperCase())) return res.status(403).send({error: "Unauthorized"})
+        if (!policies.includes(user.role.toUpperCase())) return res.status(403).send({status: "error", error: "Unauthorized"})
         req.user = user;
         next();
     }

@@ -10,3 +10,5 @@ const storage = multer.diskStorage({
 })
 
 export const uploader = multer({storage})
+
+export const uploaderThumbnail = uploader.single('thumbnail')

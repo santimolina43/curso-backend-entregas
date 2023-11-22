@@ -16,6 +16,6 @@ export default class ChatRouter extends RouterClass {
         /************************************/ 
         
         /********* POST MESSAGES *********/   
-        this.post('/api/messages', ["USER", "ADMIN", "PREMIUM"], 'next', {}, postMessage)
+        this.post('/api/messages', ["USER"], 'next', {}, postMessage)
     }
 }

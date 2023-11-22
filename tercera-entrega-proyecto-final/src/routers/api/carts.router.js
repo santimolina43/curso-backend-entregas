@@ -1,27 +1,34 @@
-import Router from 'express'
+import RouterClass from '../router.js';
 import { getProductFromCartById, createNewCart, addProductsToCartById, deleteProductsFromCartById, updateCartById, updateCartByIdAndProductId, deleteAllProductsFromCartById } from '../../controllers/cart.controller.js'
 
-const cartsRouter = Router()
+// Carts Router
+export default class CartsRouter extends RouterClass {
+    init() {
 
-/********* GET PRODUCTS FROM CART BY ID *********/    
-cartsRouter.get('/:cid', getProductFromCartById)
+        /************************************/   
+        /*************** API ****************/   
+        /************************************/ 
+        
+        /********* GET PRODUCTS FROM CART BY ID *********/    
+        this.get('/:cid', ["PUBLIC"], 'next', {}, getProductFromCartById)
 
-/********* POST CARTS *********/    
-cartsRouter.post('/', createNewCart)
+        /********* POST CARTS *********/    
+        this.post('/', ["PUBLIC"], 'next', {}, createNewCart)
 
-/********* POST PRODUCTS IN CARTS BY ID *********/    
-cartsRouter.post('/:cid/product/:pid', addProductsToCartById)
+        /********* POST PRODUCTS IN CARTS BY ID *********/    
+        this.post('/:cid/product/:pid', ["USER"], 'next', {}, addProductsToCartById)
 
-/********* DELETE PRODUCTS IN CARTS BY ID *********/    
-cartsRouter.delete('/:cid/product/:pid', deleteProductsFromCartById)
+        /********* DELETE PRODUCTS IN CARTS BY ID *********/    
+        this.delete('/:cid/product/:pid', ["USER"], 'next', {}, deleteProductsFromCartById)
+       
+        /********* UPDATE CART BY ID *********/    
+        this.put('/:cid', ["USER"], 'next', {}, updateCartById)
+       
+        /********* UPDATE CART BY ID AND PRODUCT ID *********/    
+        this.put('/:cid/products/:pid', ["USER"], 'next', {}, updateCartByIdAndProductId)
+       
+        /********* DELETE ALL PRODUCTS IN CART BY ID *********/    
+        this.delete('/:cid', ["USER"], 'next', {}, deleteAllProductsFromCartById)
 
-/********* UPDATE CART BY ID *********/    
-cartsRouter.put('/:cid', updateCartById)
-
-/********* UPDATE CART BY ID AND PRODUCT ID *********/    
-cartsRouter.put('/:cid/products/:pid', updateCartByIdAndProductId)
-
-/********* DELETE ALL PRODUCTS IN CART BY ID *********/    
-cartsRouter.delete('/:cid', deleteAllProductsFromCartById)
-
-export default cartsRouter
+    }
+}

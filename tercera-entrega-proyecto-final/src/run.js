@@ -1,7 +1,6 @@
-// Api routers
-import productsRouter from './routers/api/products.router.js'
-import cartsRouter from './routers/api/carts.router.js'
-// Migration
+// Migrated routers
+import ProductsRouter from './routers/api/products.router.js'
+import CartsRouter from './routers/api/carts.router.js'
 import SessionsRouter from './routers/api/sessions.router.js'
 import CartRouter from './routers/views/cart.router.js'
 import HomeRouter from './routers/views/home.router.js'
@@ -19,6 +18,8 @@ const productService = new ProductService()
 const chatService = new ChatService()  
 const cartService = new CartService()
 // Routers
+const productsRouter = new ProductsRouter();                             
+const cartsRouter = new CartsRouter();                             
 const sessionsRouter = new SessionsRouter();                             
 const cartRouter = new CartRouter();                             
 const homeRouter = new HomeRouter();                             
@@ -39,8 +40,8 @@ const run = (socketServer, app) => {
     app.use('/chat', chatRouter.getRouter())
     app.use('/cart', cartRouter.getRouter())
     app.use('/profile', profileRouter.getRouter())
-    app.use('/api/products', productsRouter)
-    app.use('/api/carts', cartsRouter)
+    app.use('/api/products', productsRouter.getRouter())
+    app.use('/api/carts', cartsRouter.getRouter())
     app.use('/session', sessionsRouter.getRouter())
 
 

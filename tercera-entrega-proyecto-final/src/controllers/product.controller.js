@@ -96,7 +96,6 @@ export const addNewProduct = async (req, res) => {
     req.body.thumbnail = `http://localhost:8080/imgs/${req.file.filename}`
     try {
         const newProduct = await productService.addProduct(req.body)
-        console.log(newProduct)
         if (!newProduct._id) return res.status(400).json({ status:"error", error: newProduct})
         res.status(200).json({ status: "success", payload: newProduct })
     } catch (error) {

@@ -23,6 +23,12 @@ productForm.addEventListener('submit', async function(event) {
                     })
                 } else {
                     socketClient.emit('deletedOrAddedProduct');
+                    // Mostramos el mensaje de exito al usuario
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'OK!',
+                        text: 'The product has been added correctly'
+                    })
                     const title = document.getElementById('title');
                     const description = document.getElementById('description');
                     const price = document.getElementById('price');
@@ -43,6 +49,12 @@ productForm.addEventListener('submit', async function(event) {
     }
     catch (error) {
         console.error(error);
+        // Mostramos el mensaje de error al usuario
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.error
+        })
     };
 });
 
@@ -50,11 +62,18 @@ function deleteProduct(pid) {
     fetch('/api/products/'+pid, {
         method: 'DELETE'
     })
-        .then(response => {
-            if (response.ok) {
-                socketClient.emit('deletedOrAddedProduct');
-            } else {
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'error') {
+                // Mostramos el mensaje de error al usuario
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.error
+                })
                 throw new Error('No se pudo completar la solicitud.');
+            } else {
+                socketClient.emit('deletedOrAddedProduct');
             }
         })
         .catch(error => {

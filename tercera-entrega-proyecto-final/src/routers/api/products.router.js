@@ -1,22 +1,29 @@
-import Router from 'express'
-import { uploader } from '../../middlewares/multer-uploader.js'
+import RouterClass from '../router.js';
+import { uploaderThumbnail } from '../../middlewares/multer-uploader.js'
 import { addNewProduct, deleteProductById, getProducts, getProductsById, updateProductById } from '../../controllers/product.controller.js'
 
-const productsRouter = Router()
+// Products Router
+export default class ProductsRouter extends RouterClass {
+    init() {
 
-/********* GET PRODUCTS *********/    
-productsRouter.get('/', getProducts)
+        /************************************/   
+        /*************** API ****************/   
+        /************************************/ 
 
-/********* GET PRODUCTS BY ID *********/    
-productsRouter.get('/:pid', getProductsById)
+        /********* GET PRODUCTS *********/    
+        this.get('/', ["PUBLIC"], 'next', {}, getProducts)
 
-/********* POST PRODUCTS *********/    
-productsRouter.post('/',  uploader.single('thumbnail'), addNewProduct)
+        /********* GET PRODUCTS BY ID *********/    
+        this.get('/:pid', ["PUBLIC"], 'next', {}, getProductsById)
 
-/********* PUT PRODUCTS *********/    
-productsRouter.put('/:pid', updateProductById)
+        /********* POST PRODUCTS *********/    
+        this.post('/', ["ADMIN"], 'next', {}, uploaderThumbnail, addNewProduct )
 
-/********* DELETE PRODUCTS *********/    
-productsRouter.delete('/:pid', deleteProductById)
+        /********* PUT PRODUCTS *********/    
+        this.put('/:pid', ["ADMIN"], 'next', {}, updateProductById)
+       
+        /********* DELETE PRODUCTS *********/    
+        this.delete('/:pid', ["ADMIN"], 'next', {}, deleteProductById)
 
-export default productsRouter
+    }
+}
