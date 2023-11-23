@@ -91,26 +91,18 @@ class UserService {
     }                         
 
     async getUserByField(propiedad, valor) {
-        console.log('1')
-        console.log('propiedad: '+propiedad)
-        console.log('valor: '+valor)
         // Obtengo el array de useros desde el archivo
         try {
-            console.log('2')
             const users = await this.getUsers()
             // console.log(users)
             const userFound = users.find(item => item[propiedad] == valor)
-            console.log('3')
             // Busco el user a traves de la propiedad en el array
             if (userFound) {
-                console.log('aca bro')
                 return userFound
             } else {
-                console.log('aca broder')
                 return 'No se encontró ningun user con '+propiedad+' = '+valor
             }
         } catch (error) {
-            console.log('4')
             return 'Error al realizar la solicitud de busqueda de usuarios.'
         }
     }

@@ -41,6 +41,7 @@ socketClient.on('cartProductsHistory', async data => {
     const cartProducts = document.getElementById('table_body')
     cartProducts.innerHTML = '';
     arrayProducts.forEach(p => {
+        const subTotal = p.product.price * p.quantity
         const productsInCart = `
                 <tr>
                     <td>
@@ -50,7 +51,7 @@ socketClient.on('cartProductsHistory', async data => {
                         <h5>${p.product.title}</h5>
                         <p>${p.product.description}</p>
                     </td>
-                    <td>${p.product.price}</td>
+                    <td>$${p.product.price}</td>
                     <td>
                         <div class="input-group">
                             <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity('${p.product._id}')">-</button>
@@ -58,7 +59,7 @@ socketClient.on('cartProductsHistory', async data => {
                             <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity('${p.product._id}')">+</button>
                         </div>
                     </td>
-                    <td>${p.quantity}*${p.product.price}</td>
+                    <td>$${subTotal}</td>
                     <td>
                         <button class="btn btn-danger" onclick="deleteProductFromCart('${cartId}','${p.product._id}')">Eliminar</button>
                     </td>

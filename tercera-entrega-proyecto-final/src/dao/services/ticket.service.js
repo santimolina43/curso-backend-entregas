@@ -41,23 +41,18 @@ class TicketService {
             const cart = await cartService.getCartByID(cartId)
             if (!cart._id) return 'Error al obtener el carrito de compra'
             // Obtengo el usuario del carrito
-            console.log('cartId: '+cart._id.toString())
             const cartUser = await userService.getUserByCartId(cart._id.toString())
             if (!cartUser.email) return 'Error al obtener el usuario de compra'
             // Obtengo el mail del usuario
             const userEmail = cartUser.email
             // Obtengo el total de compra
             let totalAmount = 0
-            let itemTotal = 0
             cart.products.forEach(item => {
                 const precioProducto = item.product.price;
-                console.log('precioProducto: '+precioProducto)
                 const cantidadProducto = item.quantity;
-                console.log('cantidadProducto: '+cantidadProducto)
                 // Suma el producto de la cantidad por el precio de cada producto al total
                 totalAmount += precioProducto * cantidadProducto;
             })
-            console.log('totalAmount: '+totalAmount)
             // Creamos el ticket de compra
             const ticket = await this.createTicket(totalAmount, userEmail)
             if (!ticket._id) return 'Error al crear el ticket'

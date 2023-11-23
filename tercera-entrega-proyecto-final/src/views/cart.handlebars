@@ -40,7 +40,7 @@
                 <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity('{{this.product._id}}')">+</button>
                 </div>
             </td>
-            <td>${{this.quantity}}*{{this.product.price}}</td>
+            <td>${{subTotal this.quantity this.product.price}}</td>
             <td>
                 <button class="btn btn-danger" onclick="deleteProductFromCart('{{../cart._id}}','{{this.product._id}}')">Eliminar</button>
             </td>
@@ -50,7 +50,7 @@
         </table>
     </div>
     <div class="text-end">
-        <p>Total: </p> {{!-- ${{calculateTotal cartProducts.payload.products}} --}}
+        <p>Total: ${{calculateTotal cart.products}}</p> 
         <button class="btn btn-primary" onclick="finishPurchase('{{cart._id}}')">Finalizar compra</button>
     </div>
     <hr/>
