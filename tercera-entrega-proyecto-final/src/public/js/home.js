@@ -1,5 +1,7 @@
+
+
 function addProductToCart(cart_id, product_id) {
-    fetch(`/api/carts/${cart_id}/product/${product_id}`, {
+    fetch(`/cart/${cart_id}/product/${product_id}`, {
         method: 'POST'
     })
         .then(response => {
@@ -13,3 +15,4 @@ function addProductToCart(cart_id, product_id) {
             console.error('Error en la solicitud:', error);
         });
 };
+

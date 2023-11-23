@@ -2,7 +2,6 @@
 import ProductsRouter from './routers/api/products.router.js'
 import CartsRouter from './routers/api/carts.router.js'
 import SessionsRouter from './routers/api/sessions.router.js'
-import CartRouter from './routers/views/cart.router.js'
 import HomeRouter from './routers/views/home.router.js'
 import RealTimeProductsRouter from './routers/views/realTimeProducts.router.js'
 import ChatRouter from './routers/views/chat.router.js'
@@ -21,7 +20,7 @@ const cartService = new CartService()
 const productsRouter = new ProductsRouter();                             
 const cartsRouter = new CartsRouter();                             
 const sessionsRouter = new SessionsRouter();                             
-const cartRouter = new CartRouter();                             
+// const cartRouter = new CartRouter();                             
 const homeRouter = new HomeRouter();                             
 const realTimeProductsRouter = new RealTimeProductsRouter();                             
 const chatRouter = new ChatRouter();                             
@@ -35,14 +34,12 @@ const run = (socketServer, app) => {
 
     // Me conecto a los endpoints
     app.use('/', homeRouter.getRouter())
-    app.use('/products', homeRouter.getRouter())
+    app.use('/session', sessionsRouter.getRouter())
+    app.use('/products', productsRouter.getRouter())
+    app.use('/cart', cartsRouter.getRouter())
+    app.use('/profile', profileRouter.getRouter())
     app.use('/realtimeproducts', realTimeProductsRouter.getRouter())
     app.use('/chat', chatRouter.getRouter())
-    app.use('/cart', cartRouter.getRouter())
-    app.use('/profile', profileRouter.getRouter())
-    app.use('/api/products', productsRouter.getRouter())
-    app.use('/api/carts', cartsRouter.getRouter())
-    app.use('/session', sessionsRouter.getRouter())
 
 
     socketServer.on('connection', async (socketClient) => {

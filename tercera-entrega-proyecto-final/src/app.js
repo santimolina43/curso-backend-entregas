@@ -1,5 +1,4 @@
 import express from 'express'
-import handlebars from 'express-handlebars'
 import {Server} from 'socket.io' 
 import mongoose from 'mongoose'
 import session from 'express-session'
@@ -9,6 +8,7 @@ import { Command } from 'commander'
 import run from './run.js'
 import initializePassport from "./config/passport.config.js";
 import {env_parameters} from './config/env.config.js'
+import { setHandlebars } from './config/handlebars.config.js'
 
 // configuramos variables de entorno
 const program = new Command()
@@ -27,10 +27,8 @@ app.use(express.urlencoded({extended:true}))
 // configuramos cookie parser
 app.use(cookieParser(env_parameters_obj.jwt.jwtPrivateKey))
 
-// seteamos handlebars
-app.engine('handlebars', handlebars.engine())
-app.set('views', './src/views')
-app.set('view engine', 'handlebars')
+// configuramos handlebars
+setHandlebars(app)
 
 // STORAGE
 app.use(session({

@@ -20,6 +20,29 @@ class UserService {
         return this.#_users
     }   
     
+    
+    /********* GET USER BY ID *********/
+    async getUserByCartId(cartIdValue) {
+        try {
+            const user = await this.getUserByField('cart', cartIdValue)
+            const userToFront = new UserDTO(user)
+            return userToFront
+        } catch (error) {
+            return 'Error al buscar el usuario a con CartId: '+cartIdValue
+        }
+    }
+    
+    /********* GET USER BY EMAIL *********/
+    async getUserByEmail(emailValue) {
+        try {
+            const user = await this.getUserByField('email', emailValue)
+            const userToFront = new UserDTO(user)
+            return userToFront
+        } catch (error) {
+            return 'Error al buscar el usuario a con email: '+emailValue
+        }
+    }
+
     /********* ADD USER *********/
     async addUser(user) {
         // Compruebo que esten todos los campos necesarios
@@ -66,30 +89,28 @@ class UserService {
         // Obtengo el nuevo array de useros desde la base de datos
         return this.getusers()
     }                         
-    
-    /********* GET USER BY EMAIL *********/
-    async getUserByEmail(emailValue) {
-        try {
-            const user = await this.getUserByField('email', emailValue)
-            const userToFront = new UserDTO(user)
-            return userToFront
-        } catch (error) {
-            return 'Error al buscar el usuario a con email: '+emailValue
-        }
-    }
 
     async getUserByField(propiedad, valor) {
+        console.log('1')
+        console.log('propiedad: '+propiedad)
+        console.log('valor: '+valor)
         // Obtengo el array de useros desde el archivo
         try {
-            await this.getUsers()
-            const userFound = this.#_users.find(item => item[propiedad].toString() === valor)
+            console.log('2')
+            const users = await this.getUsers()
+            // console.log(users)
+            const userFound = users.find(item => item[propiedad] == valor)
+            console.log('3')
             // Busco el user a traves de la propiedad en el array
             if (userFound) {
+                console.log('aca bro')
                 return userFound
             } else {
+                console.log('aca broder')
                 return 'No se encontró ningun user con '+propiedad+' = '+valor
             }
         } catch (error) {
+            console.log('4')
             return 'Error al realizar la solicitud de busqueda de usuarios.'
         }
     }

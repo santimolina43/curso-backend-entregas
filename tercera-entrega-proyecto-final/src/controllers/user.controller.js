@@ -35,7 +35,7 @@ export const getUsersCartView = async (req, res) => {
             const usuarioEncontrado = await userService.getUserByEmail(sessionEmail)
             if (!usuarioEncontrado._id) return res.status(404).json({ status:"error", payload: "error"})
             // Hago la peticion a la api de los carritos
-            fetch(`http://localhost:8080/api/carts/${usuarioEncontrado.cart.toString()}`, {
+            fetch(`http://localhost:8080/cart/${usuarioEncontrado.cart.toString()}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

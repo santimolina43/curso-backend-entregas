@@ -1,6 +1,6 @@
 import RouterClass from '../router.js';
 import { uploaderThumbnail } from '../../middlewares/multer-uploader.js'
-import { addNewProduct, deleteProductById, getProducts, getProductsById, updateProductById } from '../../controllers/product.controller.js'
+import { addNewProduct, deleteProductById, getHomeProducts, getProducts, getProductsById, updateProductById } from '../../controllers/product.controller.js'
 
 // Products Router
 export default class ProductsRouter extends RouterClass {
@@ -24,6 +24,15 @@ export default class ProductsRouter extends RouterClass {
        
         /********* DELETE PRODUCTS *********/    
         this.delete('/:pid', ["ADMIN"], 'next', {}, deleteProductById)
+
+
+
+        /************************************/   
+        /************** VISTAS **************/   
+        /************************************/ 
+
+        /********* HOME *********/   
+        this.get('/home', ["USER", "ADMIN", "PREMIUM"], 'jwt', {}, getHomeProducts)
 
     }
 }

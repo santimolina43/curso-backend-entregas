@@ -8,7 +8,7 @@ productForm.addEventListener('submit', async function(event) {
     const formData = new FormData(productForm);
     // Realizo una solicitud AJAX (fetch) para enviar los datos al servidor
     try {
-        await fetch('/api/products', {
+        await fetch('/products', {
             method: 'POST',
             body: formData,
         })
@@ -59,7 +59,7 @@ productForm.addEventListener('submit', async function(event) {
 });
 
 function deleteProduct(pid) {
-    fetch('/api/products/'+pid, {
+    fetch('/products/'+pid, {
         method: 'DELETE'
     })
         .then(response => response.json())

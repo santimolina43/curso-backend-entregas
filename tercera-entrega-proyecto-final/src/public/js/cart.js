@@ -1,7 +1,7 @@
 const socketClient = io();
 
 function deleteProductFromCart(cid, pid) {
-    fetch(`/api/carts/${cid}/product/${pid}`, {
+    fetch(`/cart/${cid}/product/${pid}`, {
         method: 'DELETE'
     })
         .then(response => {
@@ -9,6 +9,25 @@ function deleteProductFromCart(cid, pid) {
                 socketClient.emit('deletedOrAddedProductToCart', cid);
             } else {
                 throw new Error('No se pudo completar la solicitud.');
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud:', error);
+        });
+};
+
+function finishPurchase(cid) {
+    console.log(cid)
+    fetch(`/cart/${cid}/purchase/`, {
+        method: 'POST'
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status == "error") {
+                throw new Error('No se pudo completar la solicitud.');
+            } else {
+                console.log(data.payload)
+                window.location.href = `/cart/view/${cid}/purchase/${data.payload._id.toString()}`;
             }
         })
         .catch(error => {

@@ -36,7 +36,7 @@ class CartService {
         let cartFound = await this.getCartByID(cartID)
         if (!cartFound) return 'No existe ningun carrito con el id: '+cartID
         // Busco el producto en el array de productos del carrito
-        let productFoundInCart = cartFound.products.find(item => item.product.toString() === productFound._id.toString())
+        const productFoundInCart = cartFound.products.find(item => item.product._id.toString() == productFound._id.toString())
         if (productFoundInCart) {
             if (method==="inc") {
                 // Si encuentro el producto y el method es "inc" entonces incremento la cantidad en quantity
