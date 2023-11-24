@@ -1,6 +1,8 @@
+import CartService from '../dao/services/cart.service.js';
 import ProductService from '../dao/services/product.service.js'
 
 const productService = new ProductService()
+const cartService = new CartService()
 
 /************************************/   
 /************** VISTAS **************/   
@@ -115,5 +117,7 @@ export const deleteProductById = async (req, res) => {
     const msgError = 'No existe ningun producto con ese id'
     const productDeletedMsg = await productService.deleteProduct(id)
     if (productDeletedMsg === msgError) return res.status(404).json({status:'error', payload: productDeletedMsg})
+    const productDeletedFromCarts = await cartService.deleteProductFromAllCarts(id)
+    if (productDeletedFromCarts === msgError) return res.status(404).json({status:'error', payload: productDeletedMsg})
     res.status(200).json({status: 'success', payload: productDeletedMsg})
 }

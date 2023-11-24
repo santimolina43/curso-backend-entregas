@@ -18,7 +18,8 @@ export const createNewCart = async (req, res) => {
 export const addProductsToCartById = async (req, res) => {
     const cartId = req.params.cid
     const productId = req.params.pid
-    const updatedCart = await cartService.addProductToCart(cartId, productId, 1, "inc")
+    const quantity = req.body.quantity ? req.body.quantity : 1
+    const updatedCart = await cartService.addProductToCart(cartId, productId, quantity, "inc")
     if (!updatedCart._id) return res.status(404).json({ status:"error", payload: updatedCart})
     res.status(200).json({ status: "success", payload: updatedCart })
 }

@@ -35,9 +35,13 @@
             <td>${{this.product.price}}</td>
             <td>
                 <div class="input-group">
-                <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity('{{this.product._id}}')">-</button>
+                {{#if (restProduct this.product.stock this.quantity)}} 
+                    <button class="btn btn-outline-secondary" type="button" onclick="restProductFromCart('{{../cart._id}}','{{this.product._id}}')">-</button>
+                {{/if}}
                 <input type="text" class="form-control" value="{{this.quantity}}" readonly>
-                <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity('{{this.product._id}}')">+</button>
+                {{#if (addProduct this.product.stock this.quantity)}} 
+                    <button class="btn btn-outline-secondary" type="button" onclick="addProductToCart('{{../cart._id}}','{{this.product._id}}')">+</button>
+                {{/if}}
                 </div>
             </td>
             <td>${{subTotal this.quantity this.product.price}}</td>
@@ -50,7 +54,7 @@
         </table>
     </div>
     <div class="text-end">
-        <p>Total: ${{calculateTotal cart.products}}</p> 
+        <p>Total: ${{#if cart.products}}{{calculateTotal cart.products}}{{else}}0{{/if}}</p> 
         <button class="btn btn-primary" onclick="finishPurchase('{{cart._id}}')">Finalizar compra</button>
     </div>
     <hr/>

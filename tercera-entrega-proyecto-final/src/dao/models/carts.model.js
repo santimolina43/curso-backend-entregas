@@ -17,7 +17,10 @@ const cartSchema = new mongoose.Schema({
 })
 
 cartSchema.pre('findOne', function() {
-    this.populate('products.product')
+    this.populate({
+        path: 'products.product',
+        match: {_id: {$ne: null}}
+    })
 })
 
 const cartModel = mongoose.model(cartCollection, cartSchema)

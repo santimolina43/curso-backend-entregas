@@ -32,6 +32,10 @@ class CartService {
         // Verifico que el id de producto sea valido
         let productFound = await productService.getProductByID(productID)
         if (!productFound._id) return 'No existe ningun producto con el id: '+productID
+        // Verifico que haya suficiente stock para agregar el producto al carrito
+        if (productFound.stock < quantity) return 'No hay stock suficiente para añadir el producto al carrito'
+        // Verifico que si se trata de una resta de producto del carrito, la cantidad no quede negativa
+        if (productFound.stock + quantity < 0) return 'No es posible cargar cantidad negativa en el carrito'
         // Busco el carrito en la base de datos y devuelvo error si no lo encuentro
         let cartFound = await this.getCartByID(cartID)
         if (!cartFound) return 'No existe ningun carrito con el id: '+cartID
@@ -114,6 +118,22 @@ class CartService {
         // Seteo el array de products a '[]' para el carrito 
         await cartModel.updateOne({_id: cartId},
                                   {$set: {'products': []}})
+    }
+
+       /********* DELETE PRODUCT FROM ALL CARTS *********/
+       async deleteProductFromAllCarts(productID) {
+        try {
+            // Actualizar todos los carritos que contienen el producto eliminado
+            const carts = await cartModel.find({ 'products.product': productID });
+            carts.forEach(async (cart) => {
+                // Filtrar el producto eliminado del array de productos en el carrito
+                cart.products = cart.products.filter((product) => product.product.toString() !== productID);
+                await cart.save();
+            });
+        } catch (error) {
+            console.error('Error al eliminar el producto de los carritos' + error)
+        }
+        return 'product deleted successfully'
     }
 
 }
