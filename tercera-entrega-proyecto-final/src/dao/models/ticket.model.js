@@ -10,6 +10,14 @@ const ticketSchema = new mongoose.Schema({
     purchaser: { type: String, required: true }
 })
 
+// Antes de guardar el documento, asigna un nuevo valor único para el código
+ticketSchema.pre('validate', async function (next) {
+    if (!this.code) {
+        this.code = uuidv4();
+    }
+    next();
+});
+
 const ticketModel = mongoose.model(ticketCollection, ticketSchema)
 
 export default ticketModel

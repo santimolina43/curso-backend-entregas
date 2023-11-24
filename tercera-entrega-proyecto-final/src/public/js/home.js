@@ -9,11 +9,16 @@ function addProductToCart(cart_id, product_id) {
             'Content-Type': 'application/json' // Indica que estás enviando JSON
         }
     })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = `http://localhost:8080/cart/`;
+        .then(response => response.json())
+        .then(data => {
+            if (data.status == "error") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.payload
+                })
             } else {
-                throw new Error('No se pudo añadir el producto al carrito.');
+                window.location.href = `http://localhost:8080/cart/`;
             }
         })
         .catch(error => {

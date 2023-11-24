@@ -4,11 +4,16 @@ function deleteProductFromCart(cid, pid) {
     fetch(`/cart/${cid}/product/${pid}`, {
         method: 'DELETE'
     })
-        .then(response => {
-            if (response.ok) {
-                socketClient.emit('deletedOrAddedProductToCart', cid);
+        .then(response => response.json())
+        .then(data => {
+            if (data.status == "error") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.payload
+                })
             } else {
-                throw new Error('No se pudo completar la solicitud.');
+                socketClient.emit('deletedOrAddedProductToCart', cid);
             }
         })
         .catch(error => {
@@ -18,22 +23,58 @@ function deleteProductFromCart(cid, pid) {
 
 function finishPurchase(cid) {
     console.log(cid)
+    // pendiente hacer un chequeo del stock para dar un aviso al usuario que
+    // los productos sin stock no se sumaran en el ticket
+    // const products = checkProductsStock(cid)
+    // console.log("products")
+    // console.log(products)
     fetch(`/cart/${cid}/purchase/`, {
         method: 'POST'
     })
         .then(response => response.json())
         .then(data => {
             if (data.status == "error") {
-                throw new Error('No se pudo completar la solicitud.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.payload
+                })
             } else {
                 console.log(data.payload)
                 window.location.href = `/cart/view/${cid}/purchase/${data.payload._id.toString()}`;
             }
         })
         .catch(error => {
-            console.error('Error en la solicitud:', error);
+            console.error('Error en la solicitud: '+data.payload, error);
         });
 };
+
+
+checkProductsStock = async (cid) => {
+    console.log(cid)
+    const products = await fetch(`/cart/${cid}`, {
+                                method: 'GET'
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status == "error") {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: data.payload
+                                        })
+                                    } else {
+                                        console.log("data.payload")
+                                        console.log(data.payload)
+                                        return data.payload
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error en la solicitud: '+data.payload, error);
+                                });
+    return products
+};
+
 
 socketClient.on('cartProductsHistory', async data => {
     const arrayProducts = data.products

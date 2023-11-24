@@ -1,10 +1,11 @@
-// import ProductService from './product.service.js'
+import ProductService from './product.service.js'
 import CartService from './cart.service.js'
 import ticketModel from '../models/ticket.model.js'
 // import userModel from '../models/users.model.js'
 import UserService from './user.service.js'
+import { v4 as uuidv4} from 'uuid'
 
-// const productService = new ProductService()
+const productService = new ProductService()
 const cartService = new CartService()
 const userService = new UserService()
 
@@ -28,8 +29,17 @@ class TicketService {
 
     /********* CREATE TICKET *********/
     async createTicket(amount, purchaserEmail) {
+        // Generamos un código único
+        let uniqueCode;
+        let isCodeUnique = false;
+        while (!isCodeUnique) {
+            uniqueCode = uuidv4();
+            const existingTicket = await ticketModel.findOne({ code: uniqueCode });
+            isCodeUnique = !existingTicket;
+        }
         // Creamos el ticket en la base de datos
-        let newTicket = await ticketModel.create({amount: amount,
+        let newTicket = await ticketModel.create({code: uniqueCode,
+                                                  amount: amount,
                                                   purchaser: purchaserEmail});
         return newTicket
     }  
@@ -47,17 +57,31 @@ class TicketService {
             const userEmail = cartUser.email
             // Obtengo el total de compra
             let totalAmount = 0
-            cart.products.forEach(item => {
-                const precioProducto = item.product.price;
-                const cantidadProducto = item.quantity;
-                // Suma el producto de la cantidad por el precio de cada producto al total
-                totalAmount += precioProducto * cantidadProducto;
+            cart.products.forEach(async item => {
+                // Si tengo stock del producto, entonces lo sumo y resto stock al producto
+                if (item.product.stock >= item.quantity) {
+                    const precioProducto = item.product.price;
+                    const cantidadProducto = item.quantity;
+                    // Suma el producto de la cantidad por el precio de cada producto al total
+                    totalAmount += precioProducto * cantidadProducto;
+                    // Elimino el producto del carrito
+                    await cartService.deleteProductFromCart(cart._id.toString(), item.product._id.toString())
+                    // Actualizo el stock del producto
+                    let newStock = item.product.stock - item.quantity
+                    await productService.updateProduct(item.product._id.toString(), {stock: newStock})
+                } 
             })
             // Creamos el ticket de compra
-            const ticket = await this.createTicket(totalAmount, userEmail)
-            if (!ticket._id) return 'Error al crear el ticket'
-            
-            return ticket
+            console.log('llego aca sin el error')
+            console.log('totalAmount: '+totalAmount)
+            console.log('userEmail: '+userEmail)
+            if (totalAmount > 0) {
+                const ticket = await this.createTicket(totalAmount, userEmail)
+                if (!ticket._id) return 'Error al crear el ticket'
+                return ticket
+            } else {
+                return 'No hay productos disponibles para este carrito'
+            }
         } catch (error) {
             console.error('Error en finishPurchaseInCartById: ', error.message);
             return 'Error al finalizar la compra';

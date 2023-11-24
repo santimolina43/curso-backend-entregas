@@ -29,7 +29,7 @@ export const deleteProductsFromCartById = async (req, res) => {
     const productId = req.params.pid
     const updatedCart = await cartService.deleteProductFromCart(cartId, productId)
     if (!updatedCart._id) return res.status(404).json({ status:"error", payload: updatedCart})
-    res.status(200).json({ status: "success", payload: updatedCart })
+    return res.status(200).json({ status: "success", payload: updatedCart })
 }
 
 export const updateCartById = async (req, res) => {
