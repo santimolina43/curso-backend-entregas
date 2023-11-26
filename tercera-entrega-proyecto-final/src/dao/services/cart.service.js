@@ -32,16 +32,23 @@ class CartService {
         // Verifico que el id de producto sea valido
         let productFound = await productService.getProductByID(productID)
         if (!productFound._id) return 'No existe ningun producto con el id: '+productID
-        // Verifico que haya suficiente stock para agregar el producto al carrito
-        if (productFound.stock < quantity) return 'No hay stock suficiente para añadir el producto al carrito'
-        // Verifico que si se trata de una resta de producto del carrito, la cantidad no quede negativa
-        if (productFound.stock + quantity < 0) return 'No es posible cargar cantidad negativa en el carrito'
+        if (quantity > 0) {
+            // Verifico que haya suficiente stock para agregar el producto al carrito
+            if (productFound.stock < quantity) return 'No hay stock suficiente para añadir el producto al carrito'
+        }
         // Busco el carrito en la base de datos y devuelvo error si no lo encuentro
         let cartFound = await this.getCartByID(cartID)
         if (!cartFound) return 'No existe ningun carrito con el id: '+cartID
         // Busco el producto en el array de productos del carrito
         const productFoundInCart = cartFound.products.find(item => item.product._id.toString() == productFound._id.toString())
         if (productFoundInCart) {
+            if (quantity > 0) {
+                // Verifico que haya suficiente stock para agregar el producto al carrito
+                if (productFound.stock < (quantity + productFoundInCart.quantity)) return 'No hay stock suficiente para añadir el producto al carrito'
+            } else {
+                // Verifico que si se trata de una resta de producto del carrito, la cantidad no quede negativa
+                if (productFoundInCart.quantity + quantity < 0) return 'No es posible cargar cantidad negativa en el carrito'
+            }
             if (method==="inc") {
                 // Si encuentro el producto y el method es "inc" entonces incremento la cantidad en quantity
                 await cartModel.updateOne({_id: cartID, 'products.product': productFound._id}, 

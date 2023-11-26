@@ -20,7 +20,6 @@ export const getTicketView = async (req, res) => {
     const ticketId = req.params.tid 
     try { 
         const ticket = await ticketService.getTicketByID(ticketId)
-        console.log(ticket)
         res.render('ticket', ticket)
     } 
     catch (error) {

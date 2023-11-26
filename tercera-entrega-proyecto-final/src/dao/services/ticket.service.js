@@ -72,9 +72,6 @@ class TicketService {
                 } 
             })
             // Creamos el ticket de compra
-            console.log('llego aca sin el error')
-            console.log('totalAmount: '+totalAmount)
-            console.log('userEmail: '+userEmail)
             if (totalAmount > 0) {
                 const ticket = await this.createTicket(totalAmount, userEmail)
                 if (!ticket._id) return 'Error al crear el ticket'
