@@ -55,7 +55,7 @@ const run = (socketServer, app) => {
         req.logger.fatal('Test de logger fatal')
         res.send('loggerTest realizado, revisar archivo errors.log')
     })
-    // app.use(errorHandler)
+    app.use(errorHandler)
 
 
     socketServer.on('connection', async (socketClient) => {

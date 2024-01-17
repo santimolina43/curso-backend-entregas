@@ -1,11 +1,10 @@
 
-import { env_parameters_obj } from '../app.js';
+import { env_parameters_obj } from '../config/env.config.js';
 import CustomError from '../services/errors/customError.js';
 
 export default class PersistenceFactory {
     getPersistence = async (collection) => {
-        // switch (env_parameters_obj.app.persistence) {
-        switch ('MONGO') {
+        switch (env_parameters_obj.app.persistence) {
             case 'ARRAY': // inactiva
                 let { default: DAOarray } = await import(`./${collection}.array.js`)
                 return new DAOarray

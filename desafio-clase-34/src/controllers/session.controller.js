@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { env_parameters_obj } from '../app.js';
+import { env_parameters_obj } from '../config/env.config.js';
 
 export const renderLogin = (req, res) => { 
     res.render('login', {})

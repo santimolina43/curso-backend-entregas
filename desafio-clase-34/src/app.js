@@ -5,21 +5,12 @@ import mongoose from 'mongoose'
 import session from 'express-session'
 import passport from "passport";
 import cookieParser from "cookie-parser";
-import { Command } from 'commander'
 import run from './run.js'
 import initializePassport from "./config/passport.config.js";
-import { env_parameters } from './config/env.config.js'
+import { env_parameters_obj } from './config/env.config.js'
 import { setHandlebars } from './config/handlebars.config.js'
 import { createLogger } from './config/logger.config.js';
 import { addLogger } from './middlewares/addLogger.js';
-
-// configuramos variables de entorno
-const program = new Command()
-program
-    .option('-p <port>', 'Puerto del servidor', 8080) 
-    .option('--mode <mode>', 'Modo de ejecución', 'PRODUCTION')
-program.parse()
-export const env_parameters_obj = env_parameters(program.opts().mode)
 
 // configuramos el servidor web con express
 const app = express()                       

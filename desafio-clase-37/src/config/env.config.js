@@ -1,7 +1,10 @@
 import dotenv from 'dotenv'
+import { Command } from 'commander'
 
-// defino una funcion que reciba el entorno por parametro de entrada y devuelva las variables del archivo .env correspondiente:
-export const env_parameters = (env) => {
+
+// defino una funcion que reciba el entorno por parametro de entrada y devuelva las
+// variables del archivo .env correspondiente:
+const env_parameters = (env) => {
 
     const environment = env; 
 
@@ -36,3 +39,11 @@ export const env_parameters = (env) => {
     }
 }
 
+
+// configuramos variables de entorno segun los parametros de entrada de lanzamiento
+const program = new Command()
+program
+    .option('-p <port>', 'Puerto del servidor', 8080) 
+    .option('--mode <mode>', 'Modo de ejecución', 'PRODUCTION')
+program.parse()
+export const env_parameters_obj = env_parameters(program.opts().mode)

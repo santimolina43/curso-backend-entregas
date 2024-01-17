@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import passport from 'passport';
 import crypto from 'crypto';
-import { env_parameters_obj } from '../app.js';
+import { env_parameters_obj } from '../config/env.config.js';
 
 // generateToken: al utlilzar jwt.sign:
 // El primer argumento es un objeto con la información

@@ -1,7 +1,8 @@
 import {Router} from 'express';
 import jwt from 'jsonwebtoken';
 import { passportCall } from '../middlewares/auth-helpers.js';
-import { env_parameters_obj, logger } from '../app.js';
+import { logger } from '../app.js';
+import { env_parameters_obj } from '../config/env.config.js';
 import EErros from '../services/errors/enums.js';
 
 // Crear el router como un objeto creando una clase es otra forma de hacerlo y es totalmente valida

@@ -3,7 +3,8 @@ import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
 import passport_jwt from 'passport-jwt'
 import { generateToken, generateRandomString, extractCookie, createHash, isValidPassword} from "../middlewares/auth-helpers.js"
-import { env_parameters_obj, logger } from '../app.js'
+import { logger } from '../app.js'
+import { env_parameters_obj } from "./env.config.js"
 import UserService from "../services/user.service.js"
 import CartService from "../services/cart.service.js"
 

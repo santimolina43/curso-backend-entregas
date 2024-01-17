@@ -3,20 +3,20 @@ import winston from 'winston'
 // definimos nuestros propios niveles de loggeo
 const customWinstonLevels = {
     levels: {
-        debug: 0,
-        http: 1,
-        info: 2,
-        warning: 3,
+        fatal: 5,
         error: 4,
-        fatal: 5
+        warning: 3,
+        info: 2,
+        http: 1,
+        debug: 0
     },
     colors: {
-        debug: 'white',
-        http: 'green',
-        info: 'blue',
-        warning: 'yellow',
+        fatal: 'red',
         error: 'magenta',
-        fatal: 'red'
+        warning: 'yellow',
+        info: 'blue',
+        http: 'green',
+        debug: 'white'
     }
 }
 
@@ -35,7 +35,7 @@ export const createLogger = env => {
                     )
                 }),
                 new  winston.transports.File({
-                    filename: 'errors.log',
+                    filename: 'errors-pro.log',
                     level: 'error',
                     format: winston.format.combine(
                         winston.format.simple() 
@@ -48,13 +48,20 @@ export const createLogger = env => {
             levels: customWinstonLevels.levels,
             transports: [
                 new winston.transports.Console({
-                    level: 'debug',
+                    level: 'info',
                     format: winston.format.combine(
                         // winston.format.timestamp(), // imprime la fecha y la hora de la impresion del log
                         winston.format.colorize(), 
                         winston.format.simple()
                     )
-                })
+                }),
+                new  winston.transports.File({
+                    filename: 'errors-dev.log',
+                    level: 'fatal',
+                    format: winston.format.combine(
+                        winston.format.simple() 
+                    )
+                }),
             ]
         })
     }

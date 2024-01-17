@@ -1,0 +1,9 @@
+info: DB Conected!
+info: HTTP Server Up on port 8080! (PRODUCTION)
+error: cart.service.js - Error en getCartByID: CastError: Cast to ObjectId failed for value "i234" (type string) at path "_id" for model "carts"
+error: cart.controller.js - Error en getProductFromCartById: CustomError: cart.service.js - Error en getCartByID: CastError: Cast to ObjectId failed for value "i234" (type string) at path "_id" for model "carts"
+debug: Test de logger debug
+http: Test de logger http
+info: Test de logger info
+warning: Test de logger warning
+error: Test de logger error
