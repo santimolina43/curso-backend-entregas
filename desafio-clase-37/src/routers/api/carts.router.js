@@ -18,22 +18,22 @@ export default class CartsRouter extends RouterClass {
         this.post('/', ["PUBLIC"], 'next', {}, createNewCart)
 
         /********* POST PRODUCTS IN CARTS BY ID *********/    
-        this.post('/:cid/product/:pid', ["USER"], 'next', {}, addProductsToCartById)
+        this.post('/:cid/product/:pid', ["USER", "PREMIUM"], 'next', {}, addProductsToCartById)
 
         /********* DELETE PRODUCTS IN CARTS BY ID *********/    
-        this.delete('/:cid/product/:pid', ["USER"], 'next', {}, deleteProductsFromCartById)
+        this.delete('/:cid/product/:pid', ["USER", "PREMIUM"], 'next', {}, deleteProductsFromCartById)
        
         /********* UPDATE CART BY ID *********/    
-        this.put('/:cid', ["USER"], 'next', {}, updateCartById)
+        this.put('/:cid', ["USER", "PREMIUM"], 'next', {}, updateCartById)
        
         /********* UPDATE CART BY ID AND PRODUCT ID *********/    
-        this.put('/:cid/products/:pid', ["USER"], 'next', {}, updateCartByIdAndProductId)
+        this.put('/:cid/products/:pid', ["USER", "PREMIUM"], 'next', {}, updateCartByIdAndProductId)
        
         /********* DELETE ALL PRODUCTS IN CART BY ID *********/    
-        this.delete('/:cid', ["USER"], 'next', {}, deleteAllProductsFromCartById)
+        this.delete('/:cid', ["USER", "PREMIUM"], 'next', {}, deleteAllProductsFromCartById)
         
         /********* FINISH PURCHASE IN CART BY ID *********/    
-        this.post('/:cid/purchase/', ["USER"], 'next', {}, finishPurchaseInCartById)
+        this.post('/:cid/purchase/', ["USER", "PREMIUM"], 'next', {}, finishPurchaseInCartById)
 
         
         /************************************/   
@@ -41,10 +41,10 @@ export default class CartsRouter extends RouterClass {
         /************************************/ 
 
         /********* CARRITO *********/   
-        this.get('/', ["USER"], 'next', {}, getUsersCartView)
+        this.get('/', ["USER", "PREMIUM"], 'next', {}, getUsersCartView)
         
         /********* PURCHASE *********/
-        this.get('/view/:cid/purchase/:tid', ["USER"], 'next', {}, getTicketView)
+        this.get('/view/:cid/purchase/:tid', ["USER", "PREMIUM"], 'next', {}, getTicketView)
 
 
     }

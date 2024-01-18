@@ -1,5 +1,5 @@
 import RouterClass from '../router.js';
-import { login, githubCallback, logout, registerCallback, renderLogin, renderRegister } from '../../controllers/session.controller.js';
+import { login, githubCallback, logout, registerCallback, renderLogin, renderRegister, renderResetPassword, resetPassword, renderResetPasswordFinalStep, resetPasswordFinalStep, changeUserRole } from '../../controllers/session.controller.js';
 
 // Sessions Router
 export default class SessionsRouter extends RouterClass {
@@ -14,6 +14,12 @@ export default class SessionsRouter extends RouterClass {
 
         /********* REGISTER *********/    
         this.get('/register', ["PUBLIC"], 'next', {}, renderRegister)
+
+        /********* RESET PASSWORD *********/    
+        this.get('/resetpassword', ["PUBLIC"], 'next', {}, renderResetPassword)    
+
+        /********* RESET PASSWORD FINAL STEP *********/    
+        this.get('/resetpassword/:token', ["PUBLIC"], 'next', {}, renderResetPasswordFinalStep)   
 
         /************************************/   
         /*************** API ****************/   
@@ -31,6 +37,15 @@ export default class SessionsRouter extends RouterClass {
 
         /********* LOGOUT *********/    
         this.get('/logout', ["USER", "ADMIN", "PREMIUM"], 'next', {}, logout)
+
+        /********* RESET PASSWORD *********/    
+        this.post('/resetpassword', ["PUBLIC"], 'next', {}, resetPassword)
+
+        /********* RESET PASSWORD FINAL STEP *********/    
+        this.post('/resetpasswordfinalstep', ["PUBLIC"], 'next', {}, resetPasswordFinalStep)
+
+        /********* CHANGE ROL USER-PREMIUM *********/    
+        this.put('/users/premium/:uid', ["USER", "PREMIUM"], 'next', {}, changeUserRole)
 
     }
 }

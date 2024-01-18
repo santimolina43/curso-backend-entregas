@@ -1,5 +1,13 @@
 import jwt from 'jsonwebtoken';
 import { env_parameters_obj } from '../config/env.config.js';
+import { logger } from '../app.js';
+import UserService from '../services/user.service.js';
+import UserPasswordService from '../services/userPassword.service.js';
+import { sendResetPasswordEmail } from '../utils/resetPasswordEmail.js';
+import { createHash, generateToken, isValidPassword } from '../middlewares/auth-helpers.js'
+
+const userService = new UserService()
+const userPasswordService = new UserPasswordService()
 
 export const renderLogin = (req, res) => { 
     res.render('login', {})
@@ -7,6 +15,27 @@ export const renderLogin = (req, res) => {
 
 export const renderRegister = (req, res) => {
     res.render('register', {})
+}
+
+export const renderResetPassword = (req, res) => {
+    res.render('resetPassword', {})
+}
+
+export const renderResetPasswordFinalStep = async (req, res) => {
+    try {
+        const token = req.params.token
+        const userFound = await userPasswordService.getUserByField('token', token)
+        // si el usuario no es encontrado, probablemente el token expiró, por eso lo redirijo al usuario a la
+        // vista en donde podrá enviar nuevamente un email a su cuenta para reestablecer la contraseña
+        if (!userFound) {
+            req.logger.error('session.controller.js - Error en renderResetPasswordFinalStep: El token a expirado o es erroneo. Por favor intente nuevamente')
+            return res.status(400).render('resetPassword')
+        }   
+        res.render('resetPasswordFinalStep', userFound)
+    } catch (error) {
+        req.logger.error('session.controller.js - Error en renderResetPasswordFinalStep: '+error)
+        return res.status(400).json({ status:"error", error: error})
+    }
 }
 
 export const registerCallback = async (req, res) => {
@@ -49,4 +78,67 @@ export const githubCallback = async(req, res) => {
 
 export const logout = (req, res) => {
     res.clearCookie(env_parameters_obj.jwt.jwtCookieName).redirect('/')
+}
+
+export const resetPassword = async (req, res) => {
+    try {
+        const userToReset = req.body.email
+        logger.info('session.controller.js - req.body.email: '+userToReset)
+        const user = await userService.getUserByEmailToBack(userToReset)
+        if (!user) {
+            logger.info('session.controller.js - El usuario al que quiere cambiar la contraseña no existe')
+            logger.error('session.controller.js - User not found')
+            return res.status(404).json({ status:"error", payload: 'No existe ningun usuario con ese email'})
+        }
+        logger.info('session.controller.js - usuario encontrado')
+        logger.info('session.controller.js - generamos el token para el reseteo de contraseña')
+        const token = generateToken(userToReset);
+        logger.info('session.controller.js - creamos el registro de reseteo en la base de datos')
+        const newUserToReset = await userPasswordService.addUserToReset(userToReset, token)
+        logger.info('session.controller.js - Envio el email de reseteo de contraseña al usuario')
+        await sendResetPasswordEmail(userToReset, token)
+        return res.status(200).json({ status: "success", payload: req.body.email })
+    } catch (error) {
+        req.logger.error('session.controller.js - Error en resetPassword: '+error)
+        return res.status(400).json({ status:"error", error: error})
+    }
+}
+
+export const resetPasswordFinalStep = async (req, res) => {
+    try {
+        const email = req.body.email
+        const newPassword = req.body.password
+        // Obtengo el usuario de la base de datos y valido que la nueva contraseña sea distinta
+        logger.info('session.controller.js - Obtengo el usuario de la base de datos y valido que la nueva contraseña sea distinta')
+        const user = await userService.getUserByEmailToBack(email)
+        if (isValidPassword(user, newPassword)) return res.status(404).json({ status:"error", payload: 'Debes usar una contraseña distinta a la contraseña actual'})
+        // Actualizo la contraseña del usuario
+        logger.info('session.controller.js - Actualizo la contraseña del usuario')
+        const updatedUser = await userService.updateUserPassword(email, newPassword)
+        // Elimino el registro de reseteo de usuario de la base de datos
+        logger.info('session.controller.js - Elimino el registro de reseteo de usuario de la base de datos')
+        await userPasswordService.deleteUser(updatedUser.email)
+        return res.status(200).json({ status: "success", payload: updatedUser })
+    } catch (error) {
+        req.logger.error('session.controller.js - Error en resetPasswordFinalStep: '+error)
+        return res.status(400).json({ status:"error", error: error})
+    }
+}
+
+export const changeUserRole = async (req, res) => {
+    try {
+        const userId = req.params.uid
+        const userToUpdate = await userService.getUserByIDToBack(userId)
+        if (!userToUpdate) return res.status(400).json({ status:"error", error: 'user no encontrado'})
+        if (userToUpdate.role.toUpperCase() === "PREMIUM") {
+            const updatedUser = await userService.updateUserRole(userToUpdate.email, "user")
+            return res.status(200).json({ status: "success", payload: updatedUser })
+        } else if (userToUpdate.role.toUpperCase() === "USER") {
+            const updatedUser = await userService.updateUserRole(userToUpdate.email, "premium")
+            return res.status(200).json({ status: "success", payload: updatedUser })
+        }
+    } catch (error) {
+        req.logger.error('session.controller.js - Error en changeUserRole: '+error)
+        return res.status(400).json({ status:"error", error: error})
+    }
 }

@@ -77,7 +77,7 @@ export default class RouterClass{
     // middleware que comprueba que el usuario tenga un rol que este permitido para entrar
     // a la ruta a la que se esta queriendo acceder
     handlePolicies = policies => (req, res, next) => {
-        if (policies[0] === "PUBLIC") return next(); // Cualquiera puede entrar
+        if (policies.includes("PUBLIC")) return next(); // Cualquiera puede entrar
         // puedo enviar el token en el header de la peticion:
                 // const authHeaders = req.headers.authorization;
                 // if (!authHeaders) return res.status(401).send({status: "error", error: "Unauthorized"});
@@ -87,8 +87,8 @@ export default class RouterClass{
         if (!token) return res.render('login')
         // Obtenemos el usuario a partir del token
         let user = jwt.verify(token, env_parameters_obj.jwt.jwtPrivateKey) // verifico que el token tenga bien la palabra secreta de firma
-        // ¿El rol del usuario eciste dentro del arreglo de políticas?
-        if (!policies.includes(user.role.toUpperCase())) return res.status(403).send({status: "error", error: {code: EErros.UNAUTHORIZED, errorMsg: "Unauthorized"}})
+        // ¿El rol del usuario existe dentro del arreglo de políticas?
+        if (!policies.includes(user.role.toUpperCase())) return res.status(403).send({status: "error", errorCode: EErros.UNAUTHORIZED, error: "Unauthorized"})
         req.user = user;
         next();
     }

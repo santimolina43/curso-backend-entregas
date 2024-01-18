@@ -1,7 +1,8 @@
 import CartService from '../services/cart.service.js'
-
+import ProductService from '../services/product.service.js'
 
 const cartService = new CartService()
+const productService = new ProductService()
 
 export const getProductFromCartById = async (req, res) => {
     const id = req.params.cid
@@ -28,6 +29,15 @@ export const addProductsToCartById = async (req, res) => {
     const cartId = req.params.cid
     const productId = req.params.pid
     const quantity = req.body.quantity ? req.body.quantity : 1
+    // chequeo que el producto no sea del mismo owner que lo quiere agregar
+    req.logger.info("cart.controller.js - addProductsToCartById: chequeo que el producto no sea del mismo owner que lo quiere agregar")
+    const productToAdd = await productService.getProductByID(productId)
+    if (productToAdd.owner === req.user.email) {
+        req.logger.error('cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner')
+        return res.status(404).send({ status:"error", error: 'No es posible agregar un producto a tu carrito del cual eres owner'})
+    }
+    // procedo a añadir el producto al carrito
+    req.logger.info("cart.controller.js - addProductsToCartById: procedo a añadir el producto al carrito")
     try {
         const updatedCart = await cartService.addProductToCart(cartId, productId, quantity, "inc")
         res.status(200).json({ status: "success", payload: updatedCart })

@@ -8,10 +8,19 @@
     {{#if (isAdmin role)}}
         <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="http://localhost:8080/realTimeProducts/">Administrate Products</a>    
     {{else}}
-        <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="http://localhost:8080/cart/">Carrito</a>
+        <div>
+            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="http://localhost:8080/realTimeProducts/">Administrate Products</a>    
+        </div>
+        <div>
+            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="http://localhost:8080/cart/">Carrito</a>
+        </div>      
     {{/if}}
-
-    <h6>Rol: "{{role}}"</h6>
+    <div style="display: flex; flexdirection: row">
+        <h6>Role: "{{role}}" - </h6>
+        {{#if (isAdmin role)}}{{else}}
+        <h6 style="color:blue;" type="button" onClick="changeUserRole('{{id}}')">Change role</h6>
+        {{/if}}
+    </div>
     <h1 class="h1">Todos los productos</h1>
     <hr/>
     <div class="row row-cols-1 row-cols-md-3 g-4">

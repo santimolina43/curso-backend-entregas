@@ -1,19 +1,18 @@
-const loginForm = document.getElementById('loginForm');
-loginForm.addEventListener('submit', async function(event) {
+
+const resetPasswordForm = document.getElementById('resetPasswordForm');
+resetPasswordForm.addEventListener('submit', async function(event) {
     event.preventDefault(); // Evita la acción predeterminada de enviar el formulario
     // Obtengo los datos del formulario
     const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const loginUser = {
-        email: email,
-        password: password
+    const resetPasswordUser = {
+        email: email
     }
-    const loginUserJSON = JSON.stringify(loginUser)
+    const resetPasswordUserSON = JSON.stringify(resetPasswordUser)
     // Realizo una solicitud AJAX (fetch) para enviar los datos al servidor
     try {
-        const response = await fetch('/session/login', {
+        const response = await fetch('/session/resetPassword', {
             method: 'POST',
-            body: loginUserJSON,
+            body: resetPasswordUserSON,
             headers: {
                 'Content-Type': 'application/json' // Indica que estás enviando JSON
             }
@@ -21,10 +20,13 @@ loginForm.addEventListener('submit', async function(event) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'error') {
-                    console.log(data)
-                    throw new Error('No se pudo completar la solicitud: '+response);
+                    throw new Error(data.payload);
                 } else {
-                    window.location.href = "/";
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Email enviado!',
+                        text: 'Se ha enviado un email a '+data.payload+' con las instrucciones'
+                    })
                 }
             })
     }
@@ -32,12 +34,8 @@ loginForm.addEventListener('submit', async function(event) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Something went wrong!'+error
+            text: error
           })
     };
 });
 
-
-const register = (req, res) => {
-    res.redirect('/login/register')
-}

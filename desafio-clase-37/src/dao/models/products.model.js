@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
+import { env_parameters_obj } from '../../config/env.config.js'
 
 export const productCollection = 'products'
 
@@ -11,7 +12,8 @@ export const productSchema = new mongoose.Schema({
     code: { type: String, required: true, unique: true },
     stock: { type: Number, required: true },
     category: { type: String, required: true },
-    status: { type: Boolean, required: true }
+    status: { type: Boolean, required: true },
+    owner: { type: String, ref: "users", required: true, default: env_parameters_obj.admin.adminEmail},
 })
 
 productSchema.plugin(mongoosePaginate)

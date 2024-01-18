@@ -35,6 +35,10 @@ const env_parameters = (env) => {
         jwt: {
             jwtPrivateKey: process.env.JWT_PRIVATE_KEY,
             jwtCookieName: process.env.JWT_COOKIE_NAME
+        },
+        nodemailer: {
+            email: process.env.NODEMAILER_EMAIL,
+            password: process.env.NODEMAILER_PASSWORD
         }
     }
 }

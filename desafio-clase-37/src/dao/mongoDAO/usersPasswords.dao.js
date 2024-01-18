@@ -1,9 +1,9 @@
 
-import { usersModel } from "../models/users.model.js";
+import { usersPasswordModel } from "../models/usersPasswords.model.js";
 
-export default class UsersDAODB {
+export default class UsersPasswordDAODB {
     constructor() {
-        this.model = usersModel;
+        this.model = usersPasswordModel;
     }
 
     find = async() => {
@@ -26,17 +26,12 @@ export default class UsersDAODB {
         return result
     }
 
-    deleteOne = async(userID) => {
-        let result = await this.model.deleteOne({_id: userID})
+    deleteOne = async(userEmail) => {
+        let result = await this.model.deleteOne({email: userEmail})
         return result
     }
 
-    updateUserAndSetCampos = async(userID, campos) => {
-        let result = await this.model.updateOne({_id: userID}, {$set: campos})
-        return result
-    }
-
-    updateUserAndSetCamposByEmail = async(userEmail, campos) => {
+    updateUserAndSetCampos = async(userEmail, campos) => {
         let result = await this.model.updateOne({email: userEmail}, {$set: campos})
         return result
     }

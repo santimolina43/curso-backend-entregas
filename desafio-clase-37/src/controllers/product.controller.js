@@ -1,4 +1,6 @@
 
+import { logger } from '../app.js';
+import { env_parameters_obj } from '../config/env.config.js';
 import CartService from '../services/cart.service.js';
 import ProductService from '../services/product.service.js'
 
@@ -31,6 +33,7 @@ export const getHomeProducts = async (req, res) => {
         })
         .then(products => {
             const user = {
+                id: req.user._id,
                 first_name: req.user.first_name,
                 last_name: req.user.last_name, 
                 email: req.user.email, 
@@ -87,7 +90,7 @@ export const getProducts = async (req, res) => {
         nextLink: hasNextPage ? `http://localhost:8080/?page=${nextPage}${queryParams}` : null
         })
     } catch {
-        req.logger.error('product.controller-js - Error en getProducts: '+error)
+        req.logger.error('product.controller.js - Error en getProducts: '+error)
         return res.status(400).json({ status:"error", error: error})
     }
 }
@@ -107,35 +110,49 @@ export const getProductsById = async (req, res) => {
 export const addNewProduct = async (req, res) => {
     req.body.status = req.body.status == 'true' ? true : false
     req.body.thumbnail = `http://localhost:8080/imgs/${req.file.filename}`
+    req.logger.debug('product.controller.js - user: '+req.user.email)
+    const product = {...req.body, owner: req.user.email}
     try {
-        const newProduct = await productService.addProduct(req.body)
+        const newProduct = await productService.addProduct(product)
         res.status(200).json({ status: "success", payload: newProduct })
     } catch (error) {
-        req.logger.error('product.controller-js - Error en addNewProduct: '+error)
+        req.logger.error('product.controller.js - Error en addNewProduct: '+error)
         return res.status(400).json({ status:"error", error: error})
     }
 }
 
 export const updateProductById = async (req, res) => {
     const id = req.params.pid
+    const user = req.user
     try {
+        const productToUpdate = await productService.getProductByID(id)
+        if (productToUpdate.owner !== user.email && user.email !== env_parameters_obj.admin.adminEmail) {
+            req.logger.error('product.controller.js - No es posible actualizar un producto del cual no eres owner')
+            return res.status(404).json({ status:"error", payload: 'No es posible actualizar un producto del cual no eres owner'})
+        }
         const updatedProduct = await productService.updateProduct(id, req.body)
         if (!updatedProduct._id) return res.status(404).json({ status:"error", payload: updatedProduct})
         res.status(200).json({status:'success', payload: updatedProduct})
     } catch (error) {
-        req.logger.error('product.controller-js - Error en updateProductById: '+error)
+        req.logger.error('product.controller.js - Error en updateProductById: '+error)
         return res.status(400).json({ status:"error", error: error})
     }
 }
 
 export const deleteProductById = async (req, res) => {
     const id = req.params.pid
+    const user = req.user
     try {
+        const productToDelete = await productService.getProductByID(id)
+        if (productToDelete.owner !== user.email && user.email !== env_parameters_obj.admin.adminEmail) {
+            req.logger.error('product.controller.js - No es posible eliminar un producto del cual no eres owner')
+            return res.status(404).send({ status:"error", error: 'No es posible eliminar un producto del cual no eres owner'})
+        }
         const productDeletedMsg = await productService.deleteProduct(id)
         await cartService.deleteProductFromAllCarts(id)
         res.status(200).json({status: 'success', payload: productDeletedMsg})
     } catch (error) {
-        req.logger.error('product.controller-js - Error en deleteProductById: '+error)
+        req.logger.error('product.controller.js - Error en deleteProductById: '+error)
         return res.status(400).json({ status:"error", error: error})
     }
 }

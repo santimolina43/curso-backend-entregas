@@ -17,13 +17,13 @@ export default class ProductsRouter extends RouterClass {
         this.get('/:pid', ["PUBLIC"], 'next', {}, getProductsById)
 
         /********* POST PRODUCTS *********/    
-        this.post('/', ["ADMIN"], 'next', {}, uploaderThumbnail, addNewProduct )
+        this.post('/', ["ADMIN", "PREMIUM"], 'next', {}, uploaderThumbnail, addNewProduct )
 
         /********* PUT PRODUCTS *********/    
-        this.put('/:pid', ["ADMIN"], 'next', {}, updateProductById)
+        this.put('/:pid', ["ADMIN", "PREMIUM"], 'next', {}, updateProductById)
        
         /********* DELETE PRODUCTS *********/    
-        this.delete('/:pid', ["ADMIN"], 'next', {}, deleteProductById)
+        this.delete('/:pid', ["ADMIN", "PREMIUM"], 'next', {}, deleteProductById)
 
 
 

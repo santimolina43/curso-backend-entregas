@@ -4,6 +4,7 @@ import CustomError from './errors/customError.js'
 import EErros from '../services/errors/enums.js'
 import PersistenceFactory from '../dao/persistenceFactory.js'
 import { logger } from '../app.js'
+import { createHash } from '../middlewares/auth-helpers.js'
 
 const persistanceFactory = new PersistenceFactory()
 
@@ -114,14 +115,28 @@ class UserService {
         }
     }  
     
-    /********* UPDATE USER *********/
-    async updateUser(id, campos) {
+    /********* UPDATE USER PASSWORD *********/
+    async updateUserPassword(email, password) {
         try {
+            // Hasheo la contraseña
+            const hashedPassword = createHash(password)
             // Creo el objeto del usero modificado (let updateduser = )
-            await this.usersDAO.updateOne(id, campos)
-            return (await this.getusers()).find(item => item._id.toString() === id)
+            await this.usersDAO.updateUserAndSetCamposByEmail(email, {password: hashedPassword})
+            return await this.getUserByEmail(email)
         } catch (error) {
-            logger.error('user.service.js - Error en updateUser: '+error)
+            logger.error('user.service.js - Error en updateUserPassword: '+error)
+            throw new CustomError('Error al updatear el usuario: '+error, EErros.DATABASES_ERROR)
+        }
+    }
+
+    /********* UPDATE USER ROLE *********/
+    async updateUserRole(email, role) {
+        try {
+            logger.info('modifico el rol del usuario')
+            await this.usersDAO.updateUserAndSetCamposByEmail(email, {role: role})
+            return await this.getUserByEmailToBack(email)
+        } catch (error) {
+            logger.error('user.service.js - Error en updateUserRole: '+error)
             throw new CustomError('Error al updatear el usuario: '+error, EErros.DATABASES_ERROR)
         }
     }

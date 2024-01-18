@@ -69,9 +69,8 @@ function deleteProduct(pid) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: data.error.errorMsg
+                    text: data.error
                 })
-                throw new Error('No se pudo completar la solicitud.');
             } else {
                 socketClient.emit('deletedOrAddedProduct');
             }
