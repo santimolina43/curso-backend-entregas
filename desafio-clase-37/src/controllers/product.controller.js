@@ -111,7 +111,8 @@ export const addNewProduct = async (req, res) => {
     req.body.status = req.body.status == 'true' ? true : false
     req.body.thumbnail = `http://localhost:8080/imgs/${req.file.filename}`
     req.logger.debug('product.controller.js - user: '+req.user.email)
-    const product = {...req.body, owner: req.user.email}
+    const productOwner = req.user.email === env_parameters_obj.admin.adminEmail ? env_parameters_obj.admin.adminAlias : req.user.email 
+    const product = {...req.body, owner: productOwner}
     try {
         const newProduct = await productService.addProduct(product)
         res.status(200).json({ status: "success", payload: newProduct })
@@ -126,7 +127,7 @@ export const updateProductById = async (req, res) => {
     const user = req.user
     try {
         const productToUpdate = await productService.getProductByID(id)
-        if (productToUpdate.owner !== user.email && user.email !== env_parameters_obj.admin.adminAlias) {
+        if (productToUpdate.owner !== user.email && user.email !== env_parameters_obj.admin.adminEmail) {
             req.logger.error('product.controller.js - No es posible actualizar un producto del cual no eres owner')
             return res.status(404).json({ status:"error", payload: 'No es posible actualizar un producto del cual no eres owner'})
         }
@@ -144,7 +145,7 @@ export const deleteProductById = async (req, res) => {
     const user = req.user
     try {
         const productToDelete = await productService.getProductByID(id)
-        if (productToDelete.owner !== user.email && user.email !== env_parameters_obj.admin.adminAlias) {
+        if (productToDelete.owner !== user.email && user.email !== env_parameters_obj.admin.adminEmail) {
             req.logger.error('product.controller.js - No es posible eliminar un producto del cual no eres owner')
             return res.status(404).send({ status:"error", error: 'No es posible eliminar un producto del cual no eres owner'})
         }
