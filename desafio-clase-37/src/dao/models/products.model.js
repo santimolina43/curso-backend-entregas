@@ -13,7 +13,7 @@ export const productSchema = new mongoose.Schema({
     stock: { type: Number, required: true },
     category: { type: String, required: true },
     status: { type: Boolean, required: true },
-    owner: { type: String, ref: "users", required: true, default: env_parameters_obj.admin.adminEmail},
+    owner: { type: String, ref: "users", required: true, default: env_parameters_obj.admin.adminAlias},
 })
 
 productSchema.plugin(mongoosePaginate)

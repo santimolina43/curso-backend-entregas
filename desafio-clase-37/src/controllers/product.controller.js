@@ -126,7 +126,7 @@ export const updateProductById = async (req, res) => {
     const user = req.user
     try {
         const productToUpdate = await productService.getProductByID(id)
-        if (productToUpdate.owner !== user.email && user.email !== env_parameters_obj.admin.adminEmail) {
+        if (productToUpdate.owner !== user.email && user.email !== env_parameters_obj.admin.adminAlias) {
             req.logger.error('product.controller.js - No es posible actualizar un producto del cual no eres owner')
             return res.status(404).json({ status:"error", payload: 'No es posible actualizar un producto del cual no eres owner'})
         }
@@ -144,7 +144,7 @@ export const deleteProductById = async (req, res) => {
     const user = req.user
     try {
         const productToDelete = await productService.getProductByID(id)
-        if (productToDelete.owner !== user.email && user.email !== env_parameters_obj.admin.adminEmail) {
+        if (productToDelete.owner !== user.email && user.email !== env_parameters_obj.admin.adminAlias) {
             req.logger.error('product.controller.js - No es posible eliminar un producto del cual no eres owner')
             return res.status(404).send({ status:"error", error: 'No es posible eliminar un producto del cual no eres owner'})
         }

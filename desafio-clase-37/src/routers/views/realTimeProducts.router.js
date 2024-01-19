@@ -9,6 +9,6 @@ export default class RealTimeProductsRouter extends RouterClass {
         /************************************/ 
 
         /********* REAL TIME PRODUCTS *********/   
-        this.get('/', ["PUBLIC"], 'next', {}, getRealTimeProducts)
+        this.get('/', ["PREMIUM", "ADMIN"], 'next', {}, getRealTimeProducts)
     }
 }

@@ -26,7 +26,8 @@ const env_parameters = (env) => {
             adminEmail: process.env.ADMIN_EMAIL,
             adminPassword: process.env.ADMIN_PASSWORD,
             adminName: process.env.ADMIN_NAME,
-            adminFalseId: process.env.ADMIN_FALSE_ID
+            adminFalseId: process.env.ADMIN_FALSE_ID,
+            adminAlias: process.env.ADMIN_ALIAS
         },
         gitHub: {
             clientId: process.env.CLIENT_ID,
