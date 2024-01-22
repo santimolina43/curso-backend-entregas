@@ -1,0 +1,61 @@
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: ERROR: Error: listen EADDRINUSE: address already in use :::8080
+error: Ocurrió un error: No se pudo completar la solicitud. {"stack":"Error: No se pudo completar la solicitud.\n    at file:///Users/santimolina/Desktop/Curso%20Backend/Entregas/desafio-clase-39/src/controllers/product.controller.js:30:19\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Ocurrió un error: No se pudo completar la solicitud. {"stack":"Error: No se pudo completar la solicitud.\n    at file:///Users/santimolina/Desktop/Curso%20Backend/Entregas/desafio-clase-39/src/controllers/product.controller.js:30:19\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Ocurrió un error: No se pudo completar la solicitud. {"stack":"Error: No se pudo completar la solicitud.\n    at file:///Users/santimolina/Desktop/Curso%20Backend/Entregas/desafio-clase-39/src/controllers/user.controller.js:47:31\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: product.service.js - Error en addProduct: CustomError: Codigo de producto ya existente
+error: product.controller.js - Error en addNewProduct: CustomError: CustomError: Codigo de producto ya existente
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: router.js - applyCallbacks - TypeError: Cannot read properties of undefined (reading 'filename')
+error: router.js - applyCallbacks - TypeError: Cannot read properties of undefined (reading 'filename')
+error: router.js - applyCallbacks - TypeError: Cannot read properties of undefined (reading 'filename')
+error: router.js - applyCallbacks - TypeError: Cannot read properties of undefined (reading 'filename')
+error: router.js - applyCallbacks - TypeError: Cannot read properties of undefined (reading 'filename')
+error: product.service.js - Error en addProduct: CustomError: Codigo de producto ya existente
+error: product.controller.js - Error en addNewProduct: CustomError: CustomError: Codigo de producto ya existente
+error: router.js - applyCallbacks - TypeError: Cannot read properties of undefined (reading 'filename')
+error: product.service.js - Error en getProductByField: CustomError: No se encontró ningun producto con _id = 65ad8c5d31999d7d7489f09
+error: product.service.js - Error en getProductByID: CustomError: CustomError: No se encontró ningun producto con _id = 65ad8c5d31999d7d7489f09
+error: product.controller-js - Error en getProductsById: CustomError: CustomError: CustomError: No se encontró ningun producto con _id = 65ad8c5d31999d7d7489f09
+error: product.controller.js - No es posible actualizar un producto del cual no eres owner
+error: product.service.js - Error en getProductByField: CustomError: No se encontró ningun producto con _id = sss
+error: product.service.js - Error en getProductByID: CustomError: CustomError: No se encontró ningun producto con _id = sss
+error: product.controller.js - Error en deleteProductById: CustomError: CustomError: CustomError: No se encontró ningun producto con _id = sss
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: product.service.js - Error en getProductByField: CustomError: No se encontró ningun producto con _id = 65ad4d5cc8b50e21a1d0d11e
+error: product.service.js - Error en getProductByID: CustomError: CustomError: No se encontró ningun producto con _id = 65ad4d5cc8b50e21a1d0d11e
+error: product.controller.js - Error en deleteProductById: CustomError: CustomError: CustomError: No se encontró ningun producto con _id = 65ad4d5cc8b50e21a1d0d11e
+error: product.controller.js - No es posible eliminar un producto del cual no eres owner
+error: cart.service.js - Error en getCartByID: CustomError: No se encontró ningun carrito con el id: 65aaa59d0f1fad1e5543a238
+error: cart.controller.js - Error en updateCartById: CustomError: cart.service.js - Error en getCartByID: CustomError: No se encontró ningun carrito con el id: 65aaa59d0f1fad1e5543a238
+error: cart.service.js - Error en deleteAllProductsFromCartById: CastError: Cast to ObjectId failed for value "{cid}" (type string) at path "_id" for model "carts"
+error: cart.controller.js - Error en deleteAllProductsFromCartById: CustomError: cart.service.js - Error en deleteAllProductsFromCartById: CastError: Cast to ObjectId failed for value "{cid}" (type string) at path "_id" for model "carts"
+error: cart.service.js - Error en deleteAllProductsFromCartById: CastError: Cast to ObjectId failed for value "{cid}" (type string) at path "_id" for model "carts"
+error: cart.controller.js - Error en deleteAllProductsFromCartById: CustomError: cart.service.js - Error en deleteAllProductsFromCartById: CastError: Cast to ObjectId failed for value "{cid}" (type string) at path "_id" for model "carts"
+error: cart.service.js - Error en deleteAllProductsFromCartById: CastError: Cast to ObjectId failed for value "{cid}" (type string) at path "_id" for model "carts"
+error: cart.controller.js - Error en deleteAllProductsFromCartById: CustomError: cart.service.js - Error en deleteAllProductsFromCartById: CastError: Cast to ObjectId failed for value "{cid}" (type string) at path "_id" for model "carts"
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: cart.controller.js - No es posible agregar un producto a tu carrito del cual eres owner
+error: undefined
+error: undefined
